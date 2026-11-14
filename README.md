@@ -1,19 +1,19 @@
-# Portale Giocatori — Teschi di Cera
+# Teschi di Cera — Portale Giocatori
 
-Repository **privato** dedicato alla pagina riservata ai giocatori della campagna Dungeons & Dragons **Teschi di Cera**.
+Sito di consultazione della campagna fantasy **Teschi di Cera** (Dungeons & Dragons 5e, regole 2014).
 
-## Stato attuale
+La pagina raccoglie il diario delle sessioni realmente giocate, le schede di White, Gorian, Rey ed Elara e, quando disponibili, le immagini approvate dal Dungeon Master.
 
-**Configurazione in corso.** Nessuna informazione della campagna viene pubblicata finché il controllo degli accessi Cloudflare non è attivo e verificato.
+## Accesso al sito
 
-La pagina `index.html` è volutamente un **segnaposto innocuo**. Dopo l'installazione di Cloudflare Pages e la verifica di Cloudflare Access sul sito di produzione e su tutte le anteprime, verrà sostituita con il portale giocatori ufficiale in sola lettura, attualmente conservato nel repository privato del Master.
+Dopo l'attivazione di GitHub Pages, il portale si trova all'indirizzo:
 
-## Accessi
+**https://at-selune.github.io/WaxSkull-DND-Players/**
 
-L'accesso al **sito** sarà consentito soltanto alle email autorizzate dal Master tramite Cloudflare Access. Gli utenti non devono essere invitati come collaboratori del repository: su un repository personale i collaboratori possono scrivere nel codice.
+## Sola lettura
 
-Non aggiungere in questo repository documentazione narrativa riservata al Dungeon Master, note segrete, chiavi di accesso o email dei giocatori.
+Il portale è destinato alla consultazione. Non sono presenti comandi per modificare personaggi, immagini, inventario, risorse o diario. I pulsanti di navigazione e i tiri di dado locali non cambiano i dati pubblicati.
 
-## Aggiornamenti
+Il sito e questo repository sono **pubblici e leggibili da chiunque**. Soltanto il proprietario e gli eventuali utenti con autorizzazioni esplicite di scrittura su GitHub possono cambiare i file ufficiali. Si prega di non inviare pull request con modifiche al canone; gli aggiornamenti vengono gestiti dal Dungeon Master.
 
-Il Master può richiedere correzioni al portale da qualsiasi conversazione ChatGPT del progetto. Il file ufficiale viene revisionato e verificato prima della pubblicazione.
+Questo sito è un progetto amatoriale e non è affiliato a D&D Beyond.
