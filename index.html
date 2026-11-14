@@ -254,6 +254,99 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
  .party-white .party-photo img{transform:scale(1.10)}
 }
 
+
+/* WAXSKULL V4.1: mobile character sheets must never inherit a 575px min-content width. */
+@media (max-width: 900px) {
+  .sheettabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 8px;
+    overflow: visible;
+  }
+  .sheettabs .tab {
+    min-width: 0;
+    width: 100%;
+    padding: 10px 7px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    text-align: center;
+    line-height: 1.3;
+  }
+}
+@media (max-width: 760px) {
+  .char-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-width: 0;
+    width: 100%;
+  }
+  .char-layout > .sidebar,
+  .char-layout > .sheet,
+  .sheetgrid,
+  .sheetmain,
+  .infoaside,
+  .panelcard {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .sidebar .people {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 7px;
+    overflow: visible;
+  }
+  .sidebar .personbtn {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    gap: 7px;
+    margin: 0;
+    padding: 7px 6px;
+  }
+  .sidebar .personbtn strong,
+  .sidebar .personbtn small {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .sidebar .smallportrait { width: 36px; height: 36px; }
+  .sheethead { grid-template-columns: 96px minmax(0, 1fr); }
+  .sheethead > * { min-width: 0; }
+  .sheethead .headtags .pill {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+  .statstrip,
+  .abilities,
+  .skills,
+  .equipment,
+  .simplegrid { min-width: 0; max-width: 100%; }
+  .skill { grid-template-columns: 18px minmax(0, 1fr) 44px; }
+  .skill > span { min-width: 0; overflow-wrap: break-word; }
+  .skill button { min-width: 38px; padding: 6px 0; text-align: right; }
+  .panelcard .item, .panelcard .minirow, .panelcard .simpleitem,
+  .panelcard .equipment div { min-width: 0; overflow-wrap: anywhere; }
+  .panelcard .minirow > * { min-width: 0; }
+  .panelcard .minirow strong { text-align: right; }
+}
+@media (max-width: 420px) {
+  .sheethead { grid-template-columns: 80px minmax(0, 1fr); gap: 10px; padding: 12px; }
+  .sheethead .portrait { width: 80px; height: 96px; }
+  .sheethead h1 { font-size: 30px; line-height: 1.05; }
+  .sheethead p { font-size: 11px; line-height: 1.45; }
+  .statstrip, .abilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .statstrip .stat-tile:last-child { grid-column: 1 / -1; }
+  .panelcard { padding: 14px 13px; }
+  .equipment { grid-template-columns: 1fr; }
+  .panelcard .contentrow { flex-wrap: wrap; }
+  .stat-tile .lbl { overflow-wrap: break-word; }
+}
+
 </style>
 </head>
 <body>
