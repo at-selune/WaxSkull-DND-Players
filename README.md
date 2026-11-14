@@ -1,19 +1,29 @@
 # Teschi di Cera — Portale Giocatori
 
-Sito di consultazione della campagna fantasy **Teschi di Cera** (Dungeons & Dragons 5e, regole 2014).
+Portale ufficiale di consultazione per la campagna **Teschi di Cera** (Dungeons & Dragons 5e, regole 2014).
 
-La pagina raccoglie il diario delle sessioni realmente giocate, le schede di White, Gorian, Rey ed Elara e, quando disponibili, le immagini approvate dal Dungeon Master.
-
-## Accesso al sito
-
-Dopo l'attivazione di GitHub Pages, il portale si trova all'indirizzo:
+## Apri il portale
 
 **https://at-selune.github.io/WaxSkull-DND-Players/**
 
-## Sola lettura
+L'indirizzo è quello gratuito di **GitHub Pages**. **Non è previsto alcun dominio personalizzato:** non occorrono acquisti, DNS o un file `CNAME`.
 
-Il portale è destinato alla consultazione. Non sono presenti comandi per modificare personaggi, immagini, inventario, risorse o diario. I pulsanti di navigazione e i tiri di dado locali non cambiano i dati pubblicati.
+Il portale raccoglie il diario delle sessioni realmente giocate, le schede di White, Gorian, Rey ed Elara e le immagini approvate dal Dungeon Master quando verranno aggiunte.
 
-Il sito e questo repository sono **pubblici e leggibili da chiunque**. Soltanto il proprietario e gli eventuali utenti con autorizzazioni esplicite di scrittura su GitHub possono cambiare i file ufficiali. Si prega di non inviare pull request con modifiche al canone; gli aggiornamenti vengono gestiti dal Dungeon Master.
+## Sola lettura per i giocatori
 
-Questo sito è un progetto amatoriale e non è affiliato a D&D Beyond.
+Le schede, il diario, gli inventari, i PF e le immagini possono essere aggiornati solo attraverso modifiche autorizzate alla versione ufficiale. La pagina non offre campi di modifica, note personali, upload o comandi di salvataggio. I pulsanti di navigazione e i tiri d20 locali **non modificano i dati**.
+
+**Sito e repository sono pubblicamente leggibili**. I visitatori possono consultare o copiare il codice, ma non effettuare push o modificare il sito ufficiale senza permessi GitHub di scrittura. Il Master gestisce gli aggiornamenti; i giocatori non devono essere aggiunti come collaboratori.
+
+## Manutenzione
+
+- `index.html` — pagina principale, autonoma, in sola lettura.
+- `.nojekyll` — disabilita l'elaborazione Jekyll.
+- `README.md` — questa guida.
+
+**Pubblicazione:** GitHub Pages, branch `main`, cartella `/(root)`. I nuovi commit al sito vengono pubblicati allo stesso indirizzo.
+
+**Archivio del Master:** separato e privato. Non aggiungere a questo repository note riservate, spoiler di future sessioni o dati personali dei giocatori.
+
+Questo progetto amatoriale non è affiliato a D&D Beyond.
