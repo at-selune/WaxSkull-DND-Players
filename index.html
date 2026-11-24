@@ -611,6 +611,39 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 @media(max-width:760px){.gq-shell{gap:9px}.gq-heading{padding:12px}.gq-grid,.gq-combos{grid-template-columns:minmax(0,1fr)}.gq-turn{grid-template-columns:1fr;gap:3px}.gq-turn span{padding:4px 8px}.gq-panel>header{padding:9px 11px}.gq-panel>header h3{font-size:18px}.gq-rows{padding:0 11px}.gq-row{padding:7px 0}.gq-panel,.gq-reference{scroll-margin-top:90px}.gq-jump .btn{font-size:11px}.gq-default{font-size:12px}.gq-stats>div{padding:7px}.gq-stats span{font-size:11px}}
 @media(max-width:360px){.gq-stats{grid-template-columns:1fr}.gq-resource-list>div{grid-template-columns:minmax(0,1fr) 22px 78px}}
 
+
+/* V4.16 interactive quick guide */
+.gq-planner{padding:12px 14px;min-width:0}
+.gq-plan-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.gq-plan-head h3{margin:4px 0 0;font-size:21px}
+.gq-plan-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.gq-context{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gq-context label{display:grid;gap:4px;color:#eed3a9;font-size:12px;min-width:0}
+.gq-context select{width:100%;min-width:0;max-width:100%;padding:8px;border:1px solid #8b6744;border-radius:2px;background:#171112;color:#f0dfc4;font-size:13px}
+.gq-plan-help{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0}
+.gq-plan-help:last-child{margin-bottom:0}
+.gq-budget-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.gq-budget-strip>div{background:#211719;border:1px solid #624731;min-width:0;padding:7px 9px}
+.gq-budget-strip b,.gq-budget-strip span{display:block;overflow-wrap:anywhere;line-height:1.4}
+.gq-budget-strip b{font-size:10px;text-transform:uppercase;color:#c9a875}
+.gq-budget-strip span{font-size:12px;color:#f0dfc4}
+.gq-preview-cost{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.gq-preview-cost>span{border:1px solid #715337;padding:4px 6px;font-size:11px;color:#d9c7ad;line-height:1.4}
+.gq-preview-cost b{color:#e9c88d;font-variant-numeric:tabular-nums}
+.gq-live-message{font-size:12px;color:#e9c88d;line-height:1.45;margin:7px 0 0;min-height:1.45em;overflow-wrap:anywhere}
+.gq-pick.gq-row{display:block;width:100%;text-align:left;border:1px solid #65492e;border-radius:2px;background:#211719;margin:6px 0;padding:8px 10px;color:inherit;white-space:normal;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s}
+.gq-pick.gq-row:hover:not(:disabled){border-color:#dbac6f;background:#2e201b}
+.gq-pick.gq-row.gq-picked{background:#1c3225;border-color:#80ae7e;box-shadow:inset 3px 0 #80ae7e}
+.gq-pick.gq-row.gq-blocked{background:#100d10;border-color:#44372f;opacity:.72;cursor:not-allowed;box-shadow:none}
+.gq-pick.gq-blocked strong,.gq-pick.gq-blocked .gq-main,.gq-pick.gq-blocked small{color:#a59b90}
+.gq-pick-status{display:block;margin-top:5px;color:#e9c88d;font:600 10px/1.4 system-ui,sans-serif;letter-spacing:.025em;overflow-wrap:anywhere}
+.gq-picked .gq-pick-status{color:#c8e6bf}
+.gq-blocked .gq-pick-status{color:#d6a69d}
+.gq-pick-reason{display:block;color:#d6b0a5;font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.gq-pick-reason[hidden]{display:none}
+@media(max-width:760px){.gq-planner{padding:10px 11px}.gq-context{grid-template-columns:1fr}.gq-budget-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.gq-plan-head h3{font-size:19px}.gq-pick.gq-row{padding:8px}.gq-plan-buttons .btn{min-height:33px}}
+@media(max-width:360px){.gq-plan-buttons{width:100%}.gq-budget-strip>div{padding:6px}.gq-budget-strip span{font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -944,10 +977,107 @@ function guideRows(rows){return rows.map(([name,description])=>`<div class="guid
 
 /* V4.14 — consultation-first combat reference. Full guide retained as optional reference. */
 const GORIAN_QUICK={"actions":[["Pugnale","1d20 + 5 · a segno: 1d4 + 3","Perforanti · 1,5 m · lancio 6/18 m (svantaggio oltre 6 m)."],["Lama d'Ombra (se già attiva)","1d20 + 5 · a segno: 2d8 + 3","Deve essere in mano. Attivala con la bonus, anche prima dell'attacco nello stesso turno. Psichici; vantaggio se il bersaglio è in penombra/buio. Lancio 6/18 m."],["Rintocco dei Morti (creatura visibile)","TS SAG CD 12 · fallimento: 1d8 / 1d12","Trucchetto · 18 m · necrotici: 1d12 se mancano PF al bersaglio, altrimenti 1d8. Successo: 0."],["Armatura di Agathys (attivazione)","1 slot · 10 PF temporanei","1 ora · senza concentrazione. Finché hai questi PF, chi ti colpisce in mischia subisce 10 freddo, anche se li esaurisce."],["Immagine Speculare (attivazione)","1 slot · 3 copie · CA 13","1 minuto · senza concentrazione. Se ti attaccano: d20 per deviare (3 copie: 6+; 2: 8+; 1: 11+). Se colpisce CA 13, perdi una copia."],["Illusione Minore","Trucchetto · 9 m · 1 minuto","Suono O immagine di oggetto (cubo 1,5 m); Investigazione CD 12. Senza concentrazione."],["Evoca Dagon (se richiamabile)","1 azione · 0 slot · entro 9 m","Di giorno da un'ombra; in penombra/buio da un punto idoneo. Se era a 0 PF, serve prima un riposo lungo."],["Congeda Dagon (se manifestato)","1 azione · 0 slot","Scompare conservando i PF. Richiamarlo non lo cura."],["Fai attaccare Dagon al posto tuo","Rinuncia al tuo attacco · reazione di Dagon","Usa l'azione Attacco; Dagon morde subito se già a portata, con reazione disponibile e non ha ancora attaccato nel round. La tua bonus resta libera."],["Colpo senz'armi","1d20 + 1 · a segno: 0","Contundenti base · 1,5 m."],["Azioni comuni","Nessuno slot","Scatto · Disimpegno · Schivata · Aiuto · Nascondersi · Preparare · Cercare."]],"bonus":[["Comanda Dagon (se manifestato)","0 slot · 1 morso nel suo turno","Deve poter raggiungere il bersaglio e non aver già attaccato nel round."],["Secondo pugnale (dopo attacco con arma leggera)","1d20 + 5 · a segno: 1d4","Serve un'altra arma leggera nell'altra mano. Il primo attacco può anche mancare; niente +3 ai danni del secondo."],["Hex / Sortilegio (lancio)","1 slot · bersaglio visibile entro 27 m","Concentrazione fino a 1 ora. +1d6 necrotici ai TUOI attacchi a segno contro il bersaglio; svantaggio alle prove della caratteristica scelta, non ai TS."],["Trasferisci Hex (se ancora attivo e bersaglio a 0 PF)","0 slot · nuovo bersaglio visibile entro 27 m","In un tuo turno successivo; mantieni la concentrazione."],["Lama d'Ombra / Shadow Blade (attivazione)","1 slot · concentrazione fino a 1 minuto","Crea la lama in mano. Per colpire serve poi l'azione Attacco."],["Lama d'Ombra (richiamo se magia ancora attiva)","0 slot · dopo averla lasciata o lanciata","Svanisce a fine turno se la lasci/lanci. Ricreala con la bonus mentre la magia dura."],["Maledizione dell'Hexblade (se hai un utilizzo)","1 uso / breve o lungo · bersaglio visibile entro 9 m","+2 ai tuoi tiri di danno contro il maledetto; critico 19–20; +5 PF se muore mentre la maledizione è attiva. 1 minuto; senza slot/concentrazione."],["Passo Fatato (se hai un utilizzo)","1 uso / breve o lungo · 0 slot","Teletrasporto entro 9 m in uno spazio libero visibile; non provoca attacchi di opportunità."]],"dagon":[["Morso d'Ombra (se comandato)","1d20 + 4 · a segno: 2d4 + 2","Necrotici · 1,5 m · solo a segno: TS FOR CD 12, fallimento = prono. Critico: 4d4 + 2. Massimo 1 attacco per round, anche con attacco sostitutivo."],["Tattiche di Branco (passiva)","Vantaggio al morso","Se un alleato non incapacitato è entro 1,5 m dal bersaglio."],["Predatore delle Ombre (in penombra/buio)","Furtività +4 con vantaggio","Non sei automaticamente nascosto. Se non visto: vantaggio all'attacco, nessun dado extra; attacco rivela posizione."],["Movimento d'Ombra (in penombra/buio)","12 m · terreno difficile","Ignora il costo extra del terreno difficile non magico. Non attraversa muri o creature."],["Legame Oscuro (entro 30 m)","Telepatia con Gorian","Percezione +3 · passiva 13 · scurovisione 36 m."],["Senza comando (anche se Gorian è incapacitato)","Movimento + azione non offensiva","Schivata · Disimpegno · Scatto · Nascondersi · Aiuto. Nessun attacco senza comando."],["Resistenza necrotica (passiva)","Danni necrotici dimezzati","Nessun utilizzo consumato. Non cumulabile con Protezione di Dagon."]],"reactions":[["Protezione di Dagon (quando subisce danni)","Reazione di Gorian + 1 utilizzo (max 2 / lungo)","Dimezza il singolo danno a Dagon, arrotonda per difetto. 11 → 5. Non usa la reazione di Dagon."],["Attacco di opportunità (se provocato)","Reazione di Gorian","Se un nemico visibile esce dalla tua portata provocando: un attacco in mischia. Non se si disimpegna o si teletrasporta."],["Attacco sostitutivo di Dagon (se a portata)","Azione Attacco di Gorian + reazione di Dagon","Rinunci al tuo attacco; Dagon morde subito se non ha già attaccato nel round. Alternativo al comando bonus. Nessuna reazione di Gorian."]],"passives":[["Vista del Diavolo","36 m · buio anche magico","Scurovisione razziale distinta: 18 m."],["Retaggio Fatato / Trance","Vantaggio TS contro charme","Immunità a sonno magico; medita 4 ore invece di dormire."],["Hex Warrior","Dopo riposo lungo","Puoi scegliere un'arma competente non a due mani per usare CAR. Per i pugnali DES +3 resta migliore."],["Patto / Maestro della Catena (già applicati)","Trova Famiglio → regole di Dagon","Evocazione senza slot, comando bonus, attacco sostitutivo, protezione limitata. Nessun secondo famiglio o attacco extra."]],"combos":[["Turno standard (Dagon presente) · 0 slot","Azione: pugnale","Bonus: comanda Dagon","Dagon: morso nel suo turno, se raggiunge il bersaglio."],["Lama d'Ombra (prima attivazione) · 1 slot","Prima: bonus, crea Shadow Blade","Poi: azione Attacco con la lama","Vantaggio se bersaglio in penombra/buio. Dal turno dopo, se attiva e in mano: attacco + comando."],["Hex (prima attivazione) · 1 slot","Prima: bonus, lancia Hex","Poi: azione pugnale (+1d6 se colpisce il maledetto)","Dal turno dopo: se Hex attivo, pugnale + comando O secondo pugnale."],["Difesa (Dagon presente) · 1 slot","Azione: Agathys O Immagine Speculare","Bonus: comanda Dagon","Dagon morde se raggiunge. Hex o Lama già attivi restano in concentrazione."],["Bonus necessaria (Dagon già a portata)","Azione: rinuncia al tuo attacco → morso immediato","Bonus: Passo Fatato, maledizione o Hex","Dagon usa la propria reazione; massimo 1 morso/round. Paga l'eventuale costo della bonus."],["A distanza (Dagon può raggiungere) · 0 slot","Azione: Rintocco dei Morti (entro 18 m)","Bonus: comanda Dagon","TS SAG CD 12; Dagon morde nel suo turno se raggiunge."],["Dagon assente (se richiamabile) · 0 slot","Azione: evocalo da un'ombra idonea entro 9 m","Bonus: comanda Dagon se può attaccare","Se era a 0 PF, prima occorre un riposo lungo."]],"resources":[["Slot del Patto (tutti di 2°)","2","Breve / lungo"],["Maledizione dell'Hexblade","1","Breve / lungo"],["Passo Fatato","1","Breve / lungo"],["Colpo Sicuro","1","Lungo"],["Protezione di Dagon","2","Lungo"]],"outside":[["Esplora / nasconditi","Gorian: Furtività +3, Percezione +2; Dagon: +4 / +3. Telepatia 30 m."],["Diversivi","Illusione Minore senza slot; non dà copertura fisica né vantaggio automatico."],["Interazioni","Persuasione +4 · Intimidire +4 · Intuizione +2 · Arcano +1."],["Oggetti","Usa corda, torce, chiodi, piede di porco, strumenti e indizi dalla scheda."]],"special":[["Colpo Sicuro (prima del tiro per colpire)","1 uso / lungo · nessuna azione aggiuntiva","Per un tuo singolo attacco dichiara l'uso al Master: colpisci senza d20, tira i danni. Non è un critico automatico."]]};
-function guideQuickRows(rows){return rows.map(([name,main,note])=>`<div class="gq-row"><strong>${esc(name)}</strong><span class="gq-main">${esc(main)}</span>${note?`<small>${esc(note)}</small>`:''}</div>`).join('')}
-function guideQuickPanel(id,title,kicker,rows){return `<section class="card gq-panel" id="guide-quick-${esc(id)}"><header><h3>${esc(title)}</h3><span>${esc(kicker)}</span></header><div class="gq-rows">${guideQuickRows(rows)}</div></section>`}
+
+/* V4.16: interactive turn planner. Selections never mutate the character trackers. */
+const GUIDE_PICK_IDS={
+ azioni:['dagger','bladeAttack','toll','agathys','mirror','illusion','summon','dismiss','substitute','unarmed','common'],
+ bonus:['command','offhand','hexCast','hexMove','bladeCast','bladeRecall','curse','fey'],
+ dagon:['bite',null,null,null,null,'dagonOther',null],
+ reazioni:['protect','opportunity','substitute'],
+ special:['rune']
+};
+const GUIDE_PICK_NAMES={dagger:'Pugnale',bladeAttack:'Lama d’Ombra',toll:'Rintocco dei Morti',agathys:'Armatura di Agathys',mirror:'Immagine Speculare',illusion:'Illusione Minore',summon:'Evoca Dagon',dismiss:'Congeda Dagon',substitute:'Attacco sostitutivo',unarmed:'Colpo senz’armi',common:'Altra azione',command:'Comanda Dagon',offhand:'Secondo pugnale',hexCast:'Lancia Hex',hexMove:'Trasferisci Hex',bladeCast:'Attiva Lama d’Ombra',bladeRecall:'Richiama Lama d’Ombra',curse:'Maledizione Hexblade',fey:'Passo Fatato',bite:'Morso d’Ombra',dagonOther:'Azione non offensiva',protect:'Protezione di Dagon',opportunity:'Attacco di opportunità',rune:'Colpo Sicuro'};
+const GUIDE_PICK_ACTION=new Set(GUIDE_PICK_IDS.azioni),GUIDE_PICK_BONUS=new Set(GUIDE_PICK_IDS.bonus);
+const GUIDE_ACTION_SPELL=new Set(['agathys','mirror']),GUIDE_BONUS_SPELL=new Set(['hexCast','bladeCast','fey']);
+const GUIDE_PICK_COST={agathys:'slot2',mirror:'slot2',hexCast:'slot2',bladeCast:'slot2',curse:'curse',fey:'fey',protect:'protection',rune:'rune'};
+const GUIDE_RESOURCE_NAMES={slot2:'Slot del Patto',curse:'Maledizione Hexblade',fey:'Passo Fatato',rune:'Colpo Sicuro',protection:'Protezione'};
+let guideTurn=null;
+function guideReadBudget(){return Object.fromEntries(Object.keys(GUIDE_RESOURCE_NAMES).map(key=>{const spec=trackSpec('gorian.'+key);return [key,spec?Math.max(0,spec.max-readTracked(spec)):0]}))}
+function guideReadDagonDown(){return readTracked(trackSpec('dagon.hp'))===0}
+function ensureGuideTurn(){if(!guideTurn)guideTurn={base:{dagon:guideReadDagonDown()?'down':'absent',magic:'none'},budget:guideReadBudget(),picks:[],message:'Imposta la situazione iniziale, poi seleziona le capacità nell’ordine in cui vuoi usarle.'};return guideTurn}
+function guideInitialState(base){return {action:null,bonus:null,gReaction:null,dReaction:null,dAction:null,command:false,attacked:false,rune:false,dagon:base.dagon,magic:base.magic,spent:{slot2:0,curse:0,fey:0,rune:0,protection:0}}}
+function guideBlockReason(id,t,budget){
+ if(!Object.prototype.hasOwnProperty.call(GUIDE_PICK_NAMES,id))return 'Capacità non riconosciuta.';
+ if(GUIDE_PICK_ACTION.has(id)&&t.action)return 'Azione di Gorian già scelta: '+GUIDE_PICK_NAMES[t.action]+'.';
+ if(GUIDE_PICK_BONUS.has(id)&&t.bonus)return 'Azione bonus già scelta: '+GUIDE_PICK_NAMES[t.bonus]+'.';
+ if(GUIDE_ACTION_SPELL.has(id)&&GUIDE_BONUS_SPELL.has(t.bonus))return 'Hai già scelto una magia con azione bonus: puoi lanciare solo un trucchetto da 1 azione.';
+ if(GUIDE_BONUS_SPELL.has(id)&&GUIDE_ACTION_SPELL.has(t.action))return 'Hai già scelto una magia di livello con l’azione: incompatibile con una magia lanciata con la bonus.';
+ if(['command','substitute','bite','dagonOther','dismiss','protect'].includes(id)&&t.dagon!=='present')return 'Dagon deve essere manifestato.';
+ if(id==='summon'&&t.dagon==='present')return 'Dagon è già manifestato.';
+ if(id==='summon'&&t.dagon==='down')return 'Dagon a 0 PF: prima serve un riposo lungo.';
+ if(id==='dismiss'&&(t.command||t.dAction||t.attacked||t.gReaction==='protect'))return 'Hai già pianificato capacità di Dagon in questo turno.';
+ if(id==='bladeAttack'&&t.magic!=='blade')return 'Prima attiva o richiama la Lama d’Ombra con la bonus; deve essere in mano.';
+ if(id==='bladeRecall'&&t.magic!=='bladeMissing')return 'Serve la magia Lama d’Ombra ancora attiva, con lama lasciata o lanciata.';
+ if(id==='hexMove'&&t.magic!=='hexReady')return 'Serve Hex ancora attivo e bersaglio a 0 PF da un turno precedente.';
+ if(id==='offhand'&&!['dagger','bladeAttack'].includes(t.action))return 'Prima scegli un attacco con un’arma leggera (pugnale o Lama d’Ombra).';
+ if(id==='command'&&(t.attacked||t.dAction))return 'Dagon ha già attaccato o ha scelto un’altra azione.';
+ if(id==='substitute'&&(t.command||t.attacked||t.dReaction))return 'Comando/attacco già scelto o reazione di Dagon non disponibile.';
+ if(id==='bite'&&!t.command)return 'Prima scegli Comanda Dagon con l’azione bonus di Gorian.';
+ if(id==='bite'&&(t.attacked||t.dAction))return 'Dagon ha già attaccato o usato la propria azione.';
+ if(id==='dagonOther'&&(t.dAction||t.command))return 'Dagon ha già un’azione scelta o un morso comandato.';
+ if(['protect','opportunity'].includes(id)&&t.gReaction)return 'Reazione di Gorian già scelta: '+GUIDE_PICK_NAMES[t.gReaction]+'.';
+ if(id==='rune'&&(t.rune||!(['dagger','bladeAttack','unarmed'].includes(t.action)||t.bonus==='offhand'||t.gReaction==='opportunity')))return 'Abbinalo a un tuo attacco con tiro per colpire, prima di tirare il dado.';
+ const cost=GUIDE_PICK_COST[id];if(cost&&t.spent[cost]>=Number(budget[cost]||0))return 'Nessun utilizzo disponibile: '+GUIDE_RESOURCE_NAMES[cost]+'.';
+ return '';
+}
+function guideApplyPick(id,t){
+ if(GUIDE_PICK_ACTION.has(id))t.action=id;
+ if(GUIDE_PICK_BONUS.has(id))t.bonus=id;
+ if(id==='summon')t.dagon='present';
+ if(id==='dismiss')t.dagon='absent';
+ if(id==='hexCast'||id==='hexMove')t.magic='hex';
+ if(id==='bladeCast'||id==='bladeRecall')t.magic='blade';
+ if(id==='command')t.command=true;
+ if(id==='substitute'){t.dReaction=id;t.attacked=true}
+ if(id==='bite'){t.dAction=id;t.attacked=true}
+ if(id==='dagonOther')t.dAction=id;
+ if(id==='protect'||id==='opportunity')t.gReaction=id;
+ if(id==='rune')t.rune=true;
+ if(GUIDE_PICK_COST[id])t.spent[GUIDE_PICK_COST[id]]++;
+}
+function guideReplay(base,picks,budget){const t=guideInitialState(base),accepted=[],dropped=[];for(const id of picks){if(accepted.includes(id)||guideBlockReason(id,t,budget)){dropped.push(id);continue}guideApplyPick(id,t);accepted.push(id)}return {t,accepted,dropped}}
+function guideCurrent(){const g=ensureGuideTurn();return guideReplay(g.base,g.picks,g.budget)}
+function guidePickStatus(id,result=guideCurrent()){const selected=result.accepted.includes(id);const reason=selected?'':guideBlockReason(id,result.t,guideTurn.budget);return {selected,blocked:!selected&&!!reason,reason}}
+function guidePick(id){
+ const g=ensureGuideTurn(),existing=g.picks.includes(id);
+ if(existing){const r=guideReplay(g.base,g.picks.filter(x=>x!==id),g.budget);g.picks=r.accepted;g.message='Annullato: '+GUIDE_PICK_NAMES[id]+(r.dropped.length?'. Annullate anche le scelte dipendenti: '+r.dropped.map(x=>GUIDE_PICK_NAMES[x]).join(', '):'.');return true}
+ const reason=guideBlockReason(id,guideCurrent().t,g.budget);if(reason){g.message=reason;return false}
+ g.picks.push(id);g.message='Selezionato: '+GUIDE_PICK_NAMES[id]+'.';return true
+}
+function guideSetContext(key,value){
+ const g=ensureGuideTurn(),allowed={dagon:['absent','present','down'],magic:['none','hex','hexReady','blade','bladeMissing']};
+ if(!allowed[key]?.includes(value))return false;
+ g.base[key]=value;g.picks=[];g.message='Situazione aggiornata. Scelte del turno azzerate.';return true
+}
+function guideResetTurn(next=false){
+ const g=ensureGuideTurn(),t=guideCurrent().t;
+ if(next){g.base={dagon:guideReadDagonDown()?'down':t.dagon,magic:t.magic};g.budget=guideReadBudget();g.message='Nuovo turno. Verifica la concentrazione, lo stato di Dagon e i consumi registrati nella scheda.'}
+ else g.message='Scelte annullate; situazione iniziale invariata.';
+ g.picks=[];
+}
+function guideStatusLabel(status){return status.selected?'✓ Selezionato · clicca per annullare':status.blocked?'Non disponibile':'Seleziona'}
+function guidePlannerSummary(){
+ const g=ensureGuideTurn(),t=guideCurrent().t;const name=x=>x?GUIDE_PICK_NAMES[x]:'Libera';
+ const magic={none:'Nessuna',hex:'Hex',hexReady:'Hex · trasferibile',blade:'Lama d’Ombra in mano',bladeMissing:'Lama d’Ombra da richiamare'}[t.magic];
+ return `<div class="gq-budget-strip"><div><b>Azione</b><span>${esc(name(t.action))}</span></div><div><b>Bonus</b><span>${esc(name(t.bonus))}</span></div><div><b>Reazione Gorian</b><span>${esc(name(t.gReaction))}</span></div><div><b>Reazione Dagon</b><span>${esc(name(t.dReaction))}</span></div><div><b>Turno Dagon</b><span>${esc(t.dAction?name(t.dAction):t.command?'Morso comandato':'Libero')}${t.attacked?' · morso già scelto':''}</span></div><div><b>Concentrazione prevista</b><span>${esc(magic)}</span></div></div><div class="gq-preview-cost">${Object.entries(GUIDE_RESOURCE_NAMES).map(([key,label])=>`<span>${esc(label)} <b>${g.budget[key]-t.spent[key]}/${g.budget[key]}</b>${t.spent[key]?' · −'+t.spent[key]+' previsto':''}</span>`).join('')}</div><p class="gq-live-message">${esc(g.message)}</p>`;
+}
+function renderGuidePlanner(){
+ const g=ensureGuideTurn(),options=(pairs,value)=>pairs.map(([v,label])=>`<option value="${esc(v)}"${v===value?' selected':''}>${esc(label)}</option>`).join('');
+ return `<section class="card gq-planner" id="guide-turn-planner"><div class="gq-plan-head"><div><div class="eyebrow">SELEZIONA LE CAPACITÀ</div><h3>Assistente del turno</h3></div><div class="gq-plan-buttons"><button type="button" class="btn sm ghost" data-guide-turn-reset="undo">Annulla scelte</button><button type="button" class="btn sm gold" data-guide-turn-reset="next">Nuovo turno</button></div></div><div class="gq-context"><label>Situazione iniziale di Dagon<select data-guide-context="dagon">${options([['absent','Non manifestato'],['present','Manifestato'],['down','A 0 PF · non richiamabile']],g.base.dagon)}</select></label><label>Magia già attiva a inizio turno<select data-guide-context="magic">${options([['none','Nessuna concentrazione'],['hex','Hex attivo'],['hexReady','Hex attivo · bersaglio a 0 PF, trasferibile'],['blade','Lama d’Ombra attiva · in mano'],['bladeMissing','Lama d’Ombra attiva · da richiamare']],g.base.magic)}</select></label></div><p class="gq-plan-help">Tocca le capacità nell’ordine di utilizzo. Verde = scelta; oscurata = incompatibile, con motivo. Tocca di nuovo una scelta per annullarla. Cambiare la situazione iniziale azzera le scelte.</p><div id="guide-turn-live" aria-live="polite">${guidePlannerSummary()}</div><p class="gq-plan-help">Disponibilità prevista / disponibilità a inizio turno, letta dalla scheda. Il sistema non consuma risorse reali: segna slot e utilizzi nella scheda prima del nuovo turno. Controlla al tavolo portata, mani libere, bersaglio, durata e condizioni delle reazioni; non sono verificabili dal portale.</p></section>`;
+}
+function syncGuidePlanner(){
+ if(state.page!=='guida'||guideView!=='gorian-dagon')return;
+ const g=ensureGuideTurn(),r=guideCurrent();
+ const live=document.getElementById('guide-turn-live');if(live)live.innerHTML=guidePlannerSummary();
+ document.querySelectorAll('[data-guide-pick]').forEach(el=>{const st=guidePickStatus(el.dataset.guidePick,r);el.disabled=st.blocked;el.classList.toggle('gq-picked',st.selected);el.classList.toggle('gq-blocked',st.blocked);el.setAttribute('aria-pressed',String(st.selected));const tag=el.querySelector('[data-guide-pick-status]'),why=el.querySelector('[data-guide-pick-reason]');if(tag)tag.textContent=guideStatusLabel(st);if(why){why.textContent=st.reason;why.hidden=!st.reason}});
+ document.querySelectorAll('[data-guide-context]').forEach(el=>{el.value=g.base[el.dataset.guideContext]});
+}
+function handleGuidePlannerChange(e){const el=e.target.closest('[data-guide-context]');if(!el)return;if(guideSetContext(el.dataset.guideContext,el.value))syncGuidePlanner()}
+
+function guideQuickRows(rows,id){const result=guideCurrent();return rows.map(([name,main,note],i)=>{const pick=GUIDE_PICK_IDS[id]?.[i];const content=`<strong>${esc(name)}</strong><span class="gq-main">${esc(main)}</span>${note?`<small>${esc(note)}</small>`:''}`;if(!pick)return `<div class="gq-row">${content}</div>`;const st=guidePickStatus(pick,result);return `<button type="button" class="gq-row gq-pick${st.selected?' gq-picked':''}${st.blocked?' gq-blocked':''}" data-guide-pick="${esc(pick)}" aria-pressed="${st.selected}"${st.blocked?' disabled':''}>${content}<span class="gq-pick-status" data-guide-pick-status>${esc(guideStatusLabel(st))}</span><span class="gq-pick-reason" data-guide-pick-reason${st.reason?'':' hidden'}>${esc(st.reason)}</span></button>`}).join('')}
+function guideQuickPanel(id,title,kicker,rows){return `<section class="card gq-panel" id="guide-quick-${esc(id)}"><header><h3>${esc(title)}</h3><span>${esc(kicker)}</span></header><div class="gq-rows">${guideQuickRows(rows,id)}</div></section>`}
 function guideReference(guide){return `<details class="card gq-reference" id="guide-quick-reference"><summary>Regole complete e approfondimenti <span aria-hidden="true">⌄</span></summary><div class="gq-reference-body">${guide.sections.map((s,i)=>`<details class="card guide-chapter" id="guide-chapter-${esc(s.id)}"><summary><span class="guide-number">${String(i+1).padStart(2,'0')}</span><span>${esc(s.title)}</span><span class="guide-chevron" aria-hidden="true">⌄</span></summary><div class="guide-chapter-body"><p class="guide-intro">${esc(s.intro)}</p>${guideRows(s.rows)}</div></details>`).join('')}</div></details>`}
-function renderQuickGorianGuide(guide){const q=GORIAN_QUICK;return `<div class="guide-shell gq-shell">
+function renderQuickGorianGuide(guide){ensureGuideTurn();const q=GORIAN_QUICK;return `<div class="guide-shell gq-shell">
 <section class="card gq-heading"><div class="gq-top"><div><div class="eyebrow">GUIDA RAPIDA · LIVELLO 3</div><h1>Gorian e Dagon</h1><p>Warlock Hexblade · Patto della Catena</p></div><div class="guide-toolbar"><button type="button" class="btn sm ghost" data-page="guida">‹ Guide</button><button type="button" class="btn sm" data-open-char="gorian">Scheda Gorian</button><button type="button" class="btn sm" data-open-dagon>Scheda Dagon</button></div></div>
 <div class="gq-stats"><div><b>Gorian</b><span>24 PF max · CA 14 · 9 m</span><small>CD 12 · attacco magico +4</small></div><div><b>Dagon</b><span>16 PF max · CA 13 · 12 m</span><small>1 morso per round · TS FOR 12</small></div></div>
 <div class="gq-turn"><span><b>Gorian:</b> movimento + 1 azione</span><span><b>Gorian:</b> max 1 bonus, anche prima dell’azione</span><span><b>Dagon:</b> turno subito dopo Gorian</span></div>
@@ -955,6 +1085,7 @@ function renderQuickGorianGuide(guide){const q=GORIAN_QUICK;return `<div class="
 <div class="gq-warnings"><span><b>Concentrazione:</b> Hex O Shadow Blade (non insieme); per ogni danno subito TS COS +2, CD 10 o metà danni se maggiore. Fallimento: perdi la magia; vale anche con PF temporanei.</span><span><b>Attenzione:</b> Hex vale solo per i tuoi attacchi a segno contro il maledetto; Hexblade's Curse è diversa. Una reazione ciascuno, recuperata a inizio del rispettivo turno.</span></div>
 <nav class="gq-jump" aria-label="Consultazione rapida">${[['azioni','Azioni'],['bonus','Bonus'],['dagon','Dagon'],['reazioni','Reazioni'],['combo','Combo'],['risorse','Riposi'],['extra','Passivi'],['explore','Esplorazione']].map(([id,label])=>`<button class="btn sm ghost" type="button" data-guide-quick-jump="${id}">${esc(label)}</button>`).join('')}</nav>
 </section>
+${renderGuidePlanner()}
 <div class="gq-grid">
 ${guideQuickPanel('azioni','Azione di Gorian','Scegline 1',q.actions)}
 ${guideQuickPanel('bonus','Azione bonus di Gorian','Scegline al massimo 1',q.bonus)}
@@ -981,9 +1112,9 @@ return guideBanner(guide.title,guide.subtitle)+`<div class="guide-shell"><div cl
 <section class="card panelcard guide-index"><h3>Indice della guida</h3><div class="guide-index-grid">${guide.sections.map((s,i)=>`<button type="button" class="btn ghost guide-index-button" data-guide-section="${esc(s.id)}"><span class="guide-number">${String(i+1).padStart(2,'0')}</span><span>${esc(s.title)}</span><span aria-hidden="true">›</span></button>`).join('')}</div></section>
 <div class="guide-chapters">${guide.sections.map((s,i)=>`<details class="card guide-chapter" id="guide-chapter-${esc(s.id)}"${i===0?' open':''}><summary><span class="guide-number">${String(i+1).padStart(2,'0')}</span><span>${esc(s.title)}</span><span class="guide-chevron" aria-hidden="true">⌄</span></summary><div class="guide-chapter-body"><p class="guide-intro">${esc(s.intro)}</p>${guideRows(s.rows)}</div></details>`).join('')}</div></div>`;}
 function openPlayerGuide(id){if(!PLAYER_GUIDES.some(g=>g.id===id))return false;resetDiaryView();guideView=id;state.page='guida';render();window.scrollTo({top:0,behavior:'instant'});return true;}
-function handleGuideClick(e){const quick=e.target.closest('[data-guide-quick-jump]');if(quick){const section=document.getElementById('guide-quick-'+quick.dataset.guideQuickJump);if(section)section.scrollIntoView({block:'start',behavior:'smooth'});return true}const open=e.target.closest('[data-open-guide]');if(open){openPlayerGuide(open.dataset.openGuide);return true}const jump=e.target.closest('[data-guide-section]');if(jump){const chapter=document.getElementById('guide-chapter-'+jump.dataset.guideSection);if(chapter){chapter.open=true;chapter.scrollIntoView({block:'start',behavior:'smooth'})}return true}return false}
+function handleGuideClick(e){const pick=e.target.closest('[data-guide-pick]');if(pick){if(!pick.disabled){guidePick(pick.dataset.guidePick);syncGuidePlanner()}return true}const reset=e.target.closest('[data-guide-turn-reset]');if(reset){guideResetTurn(reset.dataset.guideTurnReset==='next');syncGuidePlanner();return true}const quick=e.target.closest('[data-guide-quick-jump]');if(quick){const section=document.getElementById('guide-quick-'+quick.dataset.guideQuickJump);if(section)section.scrollIntoView({block:'start',behavior:'smooth'});return true}const open=e.target.closest('[data-open-guide]');if(open){openPlayerGuide(open.dataset.openGuide);return true}const jump=e.target.closest('[data-guide-section]');if(jump){const chapter=document.getElementById('guide-chapter-'+jump.dataset.guideSection);if(chapter){chapter.open=true;chapter.scrollIntoView({block:'start',behavior:'smooth'})}return true}return false}
 
-document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('input',handleDiaryInput);document.addEventListener('change',handleTrackInput);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
+document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('input',handleDiaryInput);document.addEventListener('change',handleTrackInput);document.addEventListener('change',handleGuidePlannerChange);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
 render();
 </script>
 </body>
