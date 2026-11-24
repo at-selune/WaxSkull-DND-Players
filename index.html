@@ -383,6 +383,32 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 @media(max-width:900px){.sheethead,.sheetmain,.infoaside,.panelcard,.action-detail,.spell-meta{min-width:0;max-width:100%}.action-detail>.contentrow{display:block}.action-detail .tags{margin:4px 0 8px}}
 @media(max-width:760px){.infoaside{display:grid;grid-template-columns:minmax(0,1fr)}.action-detail{padding:12px}.spell-meta{gap:5px}.spell-meta>div{padding:7px}.sidebar .companion-link{grid-column:1/-1}.sheethead .btn{max-width:100%;white-space:normal}.abilities .abname{letter-spacing:0;overflow-wrap:anywhere}}
 @media(max-width:360px){.spell-meta{grid-template-columns:minmax(0,1fr)}}
+
+/* V4.4: counters for current values only; touch-friendly and independent of the sheet data. */
+.tracker-panel{min-width:0}
+.tracker-panel h3{margin-bottom:12px}
+.tracker-line{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}
+.tracker-line>b{font-size:12px;color:#e0c9aa}
+.tracker-control{display:flex;align-items:center;gap:5px;min-width:0;max-width:100%;flex:0 0 auto}
+.tracker-control .tracker-step{display:grid;place-items:center;width:36px;height:38px;padding:0;font:normal 22px/1 system-ui,sans-serif;border-color:#9a7046;background:#301a19;color:#f4d8a4;flex:0 0 36px}
+.tracker-control .tracker-step:hover:not(:disabled){background:#532324;border-color:#e2b975}
+.tracker-control .tracker-step:disabled{opacity:.35;cursor:default}
+.tracker-control input[type=number]{font:600 17px/1 system-ui,sans-serif;width:52px;max-width:52px;min-width:0;height:38px;padding:5px 3px;text-align:center;background:#130e10;border:1px solid #96714b;border-radius:2px;color:#f1deb8;font-variant-numeric:tabular-nums}
+.tracker-control input::placeholder{color:#9b8974;opacity:1}
+.tracker-control .tracker-max{font-size:12px;color:#c8b094;white-space:nowrap;min-width:18px}
+.tracker-help,.tracker-status{font-size:11px;line-height:1.5;color:#c0aa8d;margin:11px 0 0}
+.tracker-status{margin:5px 0 0;color:#9bc6ac}
+.tracker-resource{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:11px;min-width:0}
+.tracker-resource-label{flex:1 1 128px;min-width:0}
+.tracker-resource-label b{overflow-wrap:anywhere}
+.tracker-resource-label p{margin:5px 0 0;line-height:1.45;overflow-wrap:anywhere}
+.tracker-resource.compact{padding:8px 9px;gap:6px}
+.tracker-resource.compact .tracker-resource-label{flex:1 1 100%;font-size:12px}
+.tracker-resource.compact .tracker-control{margin-left:auto}
+.tracker-resources{gap:6px}
+@media(max-width:1100px){.sheetgrid>.infoaside{order:-1;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sheetgrid>.sheetmain{order:1}}
+@media(max-width:760px){.sheetgrid>.infoaside{grid-template-columns:minmax(0,1fr)}.tracker-resource.compact .tracker-resource-label{flex:1 1 108px}.tracker-resource.compact .tracker-control{margin-left:0}.tracker-control .tracker-step{width:40px;height:44px;flex-basis:40px}.tracker-control input[type=number]{height:44px}.tracker-control{gap:4px}.tracker-resource{padding:9px}.tracker-panel{padding:14px}.tracker-line{gap:6px}}
+@media print{.tracker-step,.tracker-help,.tracker-status{display:none!important}.tracker-control input{background:white!important;color:#111!important;border:none!important}}
 </style>
 </head>
 <body>
@@ -425,6 +451,117 @@ const DEFAULT={v:1,updatedAt:0,page:'home',char:'white',tab:'statistiche',portra
 function readEmbedded(){try{return JSON.parse(document.getElementById('embedded-state').textContent||'{}')}catch(e){return {}}}
 function normalize(raw){const base=JSON.parse(JSON.stringify(DEFAULT));if(!raw||typeof raw!=='object')return base;const out={...base,...raw};for(const k of ['portraits','notes','hp','temp','resources'])if(!out[k]||typeof out[k]!=='object'||Array.isArray(out[k]))out[k]={};if(!Array.isArray(out.gallery))out.gallery=[];out.page=['home','diario','personaggi','galleria'].includes(out.page)?out.page:'home';out.char=CHARACTERS[out.char]?out.char:'white';return out;}
 let state=normalize(readEmbedded());
+
+// V4.4: only current HP, temporary HP and remaining resources are editable.
+// Storage is local to this browser; one key per counter, independent of the HTML release.
+const TRACK_PREFIX='waxskull.players.tracker.v1.';
+let trackingStorageOK=true;
+function resourcesFor(id){
+ const c=id==="dagon"?null:CHARACTERS[id];
+ const base=c?[...c.resources]:[];
+ const extras=id==="white"?[{id:"relentless",label:"Tenacia Implacabile",max:1,hint:"1 uso per riposo lungo."}]:id==="elara"?[{id:"arcaneRecovery",label:"Recupero Arcano",max:1,hint:"1 uso al giorno dopo riposo breve."}]:[];
+ const hd=Number.parseInt(c?c.hitdice:"3d8",10);
+ if(Number.isInteger(hd)&&hd>0)extras.push({id:"hitdice",label:"Dadi vita",max:hd,hint:"Dadi ancora disponibili per i riposi brevi."});
+ return [...base,...extras.filter(r=>!base.some(b=>b.id===r.id))];
+}
+function trackSpec(key){
+ const [id,field,...rest]=String(key).split('.');
+ if(rest.length||(!Object.prototype.hasOwnProperty.call(CHARACTERS,id)&&id!=='dagon'))return null;
+ const name=id==='dagon'?'Dagon':CHARACTERS[id].name;
+ const hpMax=id==='dagon'?DAGON.hp:CHARACTERS[id].hp;
+ if(field==='hp')return {id,field,key:nameKey(id,field),label:name+' — PF attuali',max:hpMax};
+ if(field==='temp')return {id,field,key:nameKey(id,field),label:name+' — PF temporanei',max:null};
+ const r=resourcesFor(id).find(x=>x.id===field);
+ return r?{id,field,key:nameKey(id,field),label:name+' — '+r.label+' disponibili',max:r.max}:null;
+}
+function nameKey(id,field){return id+'.'+field}
+function allTrackingKeys(){return [...Object.keys(CHARACTERS),'dagon'].flatMap(id=>['hp','temp',...resourcesFor(id).map(r=>r.id)].map(field=>nameKey(id,field)))}
+function readTracked(spec){
+ if(!spec)return '';
+ if(spec.field==='hp')return state.hp[spec.id]??'';
+ if(spec.field==='temp')return state.temp[spec.id]??'';
+ return state.resources[spec.id]?.[spec.field]??'';
+}
+function cleanTracked(raw,max){
+ if(raw===null||raw===undefined||String(raw).trim()==='')return '';
+ const n=Number(raw);
+ if(!Number.isFinite(n))return '';
+ return Math.max(0,Math.min(max===null?Number.MAX_SAFE_INTEGER:max,Math.trunc(n)));
+}
+function putTracked(spec,value){
+ if(spec.field==='hp')state.hp[spec.id]=value;
+ else if(spec.field==='temp')state.temp[spec.id]=value;
+ else {if(!state.resources[spec.id])state.resources[spec.id]={};state.resources[spec.id][spec.field]=value;}
+}
+function restoreTracking(){
+ try{
+  for(const key of allTrackingKeys()){
+   const spec=trackSpec(key),raw=window.localStorage.getItem(TRACK_PREFIX+key);
+   if(raw!==null)putTracked(spec,cleanTracked(raw,spec.max));
+   else {const initial=readTracked(spec);if(initial!=='')putTracked(spec,cleanTracked(initial,spec.max));}
+  }
+ }catch(e){trackingStorageOK=false;}
+}
+function updateStorageNotice(){
+ document.querySelectorAll('[data-tracker-status]').forEach(el=>{el.textContent=trackingStorageOK?'Salvataggio automatico su questo browser.':'Salvataggio locale non disponibile: i valori si perdono chiudendo la pagina.';});
+}
+function syncTracker(spec,source){
+ const v=readTracked(spec);
+ document.querySelectorAll('[data-track-key]').forEach(el=>{
+  if(el.dataset.trackKey!==spec.key)return;
+  const input=el.querySelector('[data-track-input]');
+  if(input&&input!==source)input.value=v===''?'':String(v);
+  const minus=el.querySelector('[data-track-step="-1"]'),plus=el.querySelector('[data-track-step="1"]');
+  if(minus)minus.disabled=v===''||v<=0;
+  if(plus)plus.disabled=v===''||(spec.max!==null&&v>=spec.max);
+ });
+ if(spec.field==='hp')document.querySelectorAll('[data-hp-fill]').forEach(el=>{
+  if(el.dataset.hpFill!==spec.id)return;
+  el.style.width=(v===''?0:Math.max(0,Math.min(100,v/spec.max*100)))+'%';
+  const bar=el.parentElement;
+  if(bar){if(v==='')bar.removeAttribute('aria-valuenow');else bar.setAttribute('aria-valuenow',String(v));}
+ });
+}
+function setTracked(key,raw,{persist=true,source=null}={}){
+ const spec=trackSpec(key);if(!spec)return false;
+ const val=cleanTracked(raw,spec.max);putTracked(spec,val);
+ if(persist){try{window.localStorage.setItem(TRACK_PREFIX+spec.key,String(val));}catch(e){trackingStorageOK=false;}}
+ syncTracker(spec,source);updateStorageNotice();return true;
+}
+function trackerControl(id,field){
+ const spec=trackSpec(nameKey(id,field));if(!spec)return '';
+ const v=readTracked(spec),blank=v==='';
+ return `<div class="tracker-control" data-track-key="${esc(spec.key)}" role="group" aria-label="${esc(spec.label)}"><button type="button" class="btn tracker-step" data-track-step="-1" aria-label="${esc('Diminuisci '+spec.label)}"${blank||v<=0?' disabled':''}>−</button><input type="number" min="0"${spec.max===null?'':' max="'+spec.max+'"'} step="1" inputmode="numeric" autocomplete="off" data-track-input aria-label="${esc(spec.label)}" placeholder="—" value="${esc(v)}"><button type="button" class="btn tracker-step" data-track-step="1" aria-label="${esc('Aumenta '+spec.label)}"${blank||(spec.max!==null&&v>=spec.max)?' disabled':''}>+</button>${spec.max===null?'':`<span class="tracker-max">/ ${spec.max}</span>`}</div>`;
+}
+function handleTrackInput(e){
+ const el=e.target.closest('[data-track-input]');if(!el)return;
+ const wrap=el.closest('[data-track-key]');if(!wrap)return;
+ const spec=trackSpec(wrap.dataset.trackKey);if(!spec)return;
+ // Valid values save as typed; an empty or out-of-range draft is committed on change.
+ const raw=el.value;
+ if(e.type==='input'){
+  if(raw.trim()!==''&&Number.isInteger(Number(raw))&&Number(raw)>=0&&(spec.max===null||Number(raw)<=spec.max))setTracked(spec.key,raw,{source:el});
+ }else {setTracked(spec.key,raw);el.value=String(readTracked(spec));}
+}
+function handleTrackStep(e){
+ const el=e.target.closest('[data-track-step]');if(!el)return false;
+ const wrap=el.closest('[data-track-key]'),spec=wrap&&trackSpec(wrap.dataset.trackKey);
+ if(!spec||el.disabled)return true;
+ const v=readTracked(spec);if(v==='')return true;
+ const delta=Number(el.dataset.trackStep);if(delta===1||delta===-1)setTracked(spec.key,v+delta);
+ return true;
+}
+function handleTrackingStorage(e){
+ if(typeof e.key!=='string'||!e.key.startsWith(TRACK_PREFIX))return;
+ const key=e.key.slice(TRACK_PREFIX.length);if(trackSpec(key))setTracked(key,e.newValue,{persist:false});
+}
+function trackingNotice(){return `<p class="tracker-help">Imposta il valore attuale, poi usa − e + oppure modifica il numero direttamente.</p><p class="tracker-status" data-tracker-status>${trackingStorageOK?'Salvataggio automatico su questo browser.':'Salvataggio locale non disponibile: i valori si perdono chiudendo la pagina.'}</p>`;}
+function hpPanel(id){
+ const spec=trackSpec(nameKey(id,'hp')),v=readTracked(spec),width=v===''?0:Math.min(100,Math.max(0,v/spec.max*100));
+ return `<div class="card panelcard tracker-panel"><div class="eyebrow">Stato attuale</div><h3 style="margin:8px 0 12px">Punti ferita</h3><div class="tracker-line"><b>Attuali</b>${trackerControl(id,'hp')}</div><div class="hpbar" role="progressbar" aria-label="Punti ferita" aria-valuemin="0" aria-valuemax="${spec.max}"${v===''?'':' aria-valuenow="'+v+'"'}><span data-hp-fill="${esc(id)}" style="width:${width}%"></span></div><div class="tracker-line"><b>Temporanei</b>${trackerControl(id,'temp')}</div>${trackingNotice()}</div>`;
+}
+
+restoreTracking();
 function esc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function fmt(v){if(v===null||v===undefined||v==='')return '\u2014';return Number(v)>=0?'+'+v:String(v)}
 function n(v){const r=Number(v);return Number.isFinite(r)?r:0}
@@ -470,19 +607,19 @@ function charPageTabs(){const tabs=[["statistiche","Statistiche"],["combattiment
 function renderCharacters(){const c=CHARACTERS[state.char],dog=state.char==="gorian"&&state.tab==="dagon";const head=dog?`<div class="sheethead dagon-head"><div class="portrait dagon-mark" aria-hidden="true">D</div><div><div class="eyebrow">Famiglio di Gorian</div><h1>Dagon</h1><p>Manifestazione d'Ombra · Mostruosità · Taglia Media</p><p>Compagno di Gorian, Patto della Catena.</p></div></div>`:`<div class="sheethead"><div class="portrait" aria-label="Ritratto di ${esc(c.name)}">${portrait(state.char)}</div><div><div class="eyebrow">Scheda del personaggio / Livello ${c.level}</div><h1>${esc(c.name)}</h1><p>${esc(c.race)} · ${esc(c.className)} / ${esc(c.subclass)}</p><p>${esc(c.bio)}</p>${state.char==='gorian'?'<button class="btn sm" type="button" data-open-dagon>Vedi Dagon</button>':''}</div></div>`;return `<section class="page-banner character-banner"><div class="eyebrow">WAXSKULL / PERSONAGGI</div><h1>Gli avventurieri</h1><p>Quattro storie, quattro destini.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead" style="margin-top:0"><div><div class="eyebrow">Archivio del gruppo</div><h2>Le schede dei personaggi</h2></div></div><div class="char-layout"><aside class="sidebar"><div class="eyebrow">Scegli un personaggio</div><div class="people">${Object.entries(CHARACTERS).map(([id,ch])=>`<button type="button" class="personbtn ${id===state.char&&!dog?'active':''}" data-open-char="${id}"><span class="smallportrait">${portrait(id)}</span><span><strong>${esc(ch.name)}</strong><small>${esc(ch.className)} ${ch.level}</small></span></button>`).join('')}<button type="button" class="personbtn companion-link ${dog?'active':''}" data-open-dagon><span class="smallportrait dagon-mark" aria-hidden="true">D</span><span><strong>Dagon</strong><small>Famiglio di Gorian</small></span></button></div></aside><section class="sheet">${head}<div class="sheettabs">${charPageTabs()}</div><div class="sheetgrid"><div class="sheetmain stack">${dog?renderDagon():state.tab==='statistiche'?renderStats(c):state.tab==='combattimento'?renderCombat(c):state.tab==='magie'?renderMagic(c):renderEquipment(c)}</div><aside class="infoaside">${dog?renderDagonAside():renderHP(c)+renderResourceSummary(c)}</aside></div></section></div>`}
 function renderStats(c){return `<div class="statstrip"><div class="stat-tile"><span class="val">${c.ac}</span><span class="lbl">Classe Armatura</span></div><div class="stat-tile"><span class="val">${c.ini===null?'?':fmt(c.ini)}</span><span class="lbl">Iniziativa</span></div><div class="stat-tile"><span class="val">${c.speed===null?'?':c.speed+' m'}</span><span class="lbl">Velocit\u00e0</span></div><div class="stat-tile"><span class="val">${c.passive}</span><span class="lbl">Percezione passiva</span></div><div class="stat-tile"><span class="val">+${c.prof}</span><span class="lbl">Competenza</span></div></div><section class="card panelcard"><div class="contentrow"><h3>Caratteristiche</h3></div><div class="abilities">${ABILITIES.map(([id,label],idx)=>`<div class="ability"><div class="abname">${label}</div><button type="button" data-roll="${Math.floor((c.abilities[idx]-10)/2)}" data-label="${label}" title="Tira 1d20 ${fmt(Math.floor((c.abilities[idx]-10)/2))}">${fmt(Math.floor((c.abilities[idx]-10)/2))}</button><div class="score">${c.abilities[idx]}</div></div>`).join('')}</div><div class="dicebox"><div><div class="eyebrow">Tiro rapido</div><div class="small muted">${esc(state.diceText||'Seleziona una caratteristica o una abilit\u00e0.')}</div></div><button class="btn sm" data-roll="0" data-label="D20 senza bonus">Tira d20</button></div></section><section class="card panelcard"><div class="contentrow"><h3>Abilit\u00e0</h3></div><div class="skills">${SKILLS.map((sk,i)=>`<div class="skill"><span class="prof-dot ${c.trained.includes(sk)?'yes':''}"></span><span>${esc(sk)}</span><button type="button" data-roll="${c.skills[i]}" data-label="${esc(sk)}">${fmt(c.skills[i])}</button></div>`).join('')}</div></section><section class="card panelcard"><h3>Tiri salvezza e dettagli</h3>${ABILITIES.map(([id,label],i)=>`<div class="minirow"><span>${label}</span><button class="btn sm ghost" data-roll="${c.saves[i]}" data-label="TS ${label}">${fmt(c.saves[i])} / tira</button></div>`).join('')}<div class="minirow"><span>Dadi Vita</span><strong>${c.hitdice}</strong></div><div class="minirow"><span>Lingue</span><strong>${c.language}</strong></div></section>`;}
 function renderCombat(c){return `<section class="card panelcard"><h3>Azioni principali</h3><div class="stack">${c.attacks.map(detailItem).join('')}</div></section>${state.char==='gorian'?`<section class="card panelcard"><h3>Combattere con Dagon</h3>${quickRows([["Attacco + comando","Attacca con pugnale o Shadow Blade già attiva; usa la bonus per comandare Dagon."],["Hex e bonus","Nel turno in cui lanci o trasferisci Hex non puoi anche usare la bonus per Dagon. Puoi rinunciare a un attacco dell'azione Attacco e Dagon attacca con la propria reazione."],["Protezione","Quando Dagon subisce danno: reazione di Gorian + un utilizzo dei 2 per riposo lungo."]])}<button type="button" class="btn sm" data-open-dagon style="margin-top:12px">Apri Dagon</button></section>`:''}<section class="card panelcard"><h3>Regole rapide del combattimento</h3>${quickRows([["Azione","Una per turno: Attacco, Lanciare un Incantesimo, Scatto, Disimpegno, Schivata, Aiuto, Nascondersi, Preparare o altra azione."],["Azione bonus","Al massimo una per turno se una capacità la concede. Non puoi usare due capacità con questo costo nello stesso turno."],["Movimento","Puoi dividerlo prima e dopo l'azione fino alla tua velocità; terreno difficile normalmente costa il doppio."],["Reazione","Una, anche fuori turno; torna all'inizio del tuo turno. Un nemico visibile che esce dalla portata senza Disimpegno può provocare un attacco di opportunità."],["Attacco e critico","Tira d20 + bonus contro CA. Vantaggio: due d20, maggiore; svantaggio, minore. Non si cumulano e si annullano a vicenda. Critico: raddoppia i dadi di danno, non i modificatori fissi."]])}</section>`}
-function renderMagic(c){const g=state.char==='gorian',e=state.char==='elara';return `<section class="card panelcard"><div class="contentrow"><div><div class="eyebrow">Magie e capacità</div><h3 style="margin:7px 0 4px">Le tue risorse</h3></div><div class="toolbar"><span class="pill neutral">CD ${c.spellDC}</span><span class="pill neutral">Attacco ${fmt(c.spellAttack)}</span></div></div><div class="stack">${c.resources.map(r=>resourceRow(state.char,r)).join('')}</div></section>${g?'<section class="card panelcard"><h3>Patto magico</h3><p class="spell-note">Due slot, entrambi di 2° livello. Ogni incantesimo conosciuto di 1° o 2° consuma uno slot; li recuperi con riposo breve o lungo. Trucchetti, Passo Fatato e richiamo di Dagon non consumano slot.</p></section>':''}<section class="card panelcard"><h3>${e?'Incantesimi nel libro':'Incantesimi'}</h3>${e?'<p class="spell-note">Con slot lanci le magie preparate; puoi lanciare i rituali del libro anche se non preparati.</p>':''}<div class="stack">${c.spells.map(detailItem).join('')}</div></section>${c.cantrips.length?`<section class="card panelcard"><h3>Trucchetti</h3><div class="stack">${c.cantrips.map(detailItem).join('')}</div></section>`:''}<section class="card panelcard"><h3>Capacità e tratti</h3><div class="stack">${c.features.map(detailItem).join('')}</div></section><section class="card panelcard"><h3>Regole rapide della magia</h3>${quickRows([["CD e tiro per colpire","TS: il bersaglio tira contro CD "+c.spellDC+". Attacco magico: tu tiri 1d20 "+fmt(c.spellAttack)+" contro CA."],["Concentrazione","Una magia a concentrazione alla volta. Ogni danno subito: TS COS CD 10 o metà del danno, il valore maggiore. Fallimento, morte o incapacità fanno terminare l'effetto."],["Magia con azione bonus","Se lanci un incantesimo con la bonus, nello stesso turno puoi lanciare un altro incantesimo solo se è un trucchetto da 1 azione. Puoi comunque attaccare con un'arma."],["Componenti","V = verbale, S = somatica, M = materiale. Focus sostituisce i materiali senza prezzo e non consumati, quando appropriato. I materiali consumati o con costo vanno forniti."]])}</section>`}
+function renderMagic(c){const g=state.char==='gorian',e=state.char==='elara';return `<section class="card panelcard"><div class="contentrow"><div><div class="eyebrow">Magie e capacità</div><h3 style="margin:7px 0 4px">Le tue risorse</h3></div><div class="toolbar"><span class="pill neutral">CD ${c.spellDC}</span><span class="pill neutral">Attacco ${fmt(c.spellAttack)}</span></div></div><div class="stack">${resourcesFor(state.char).map(r=>resourceRow(state.char,r)).join('')}</div></section>${g?'<section class="card panelcard"><h3>Patto magico</h3><p class="spell-note">Due slot, entrambi di 2° livello. Ogni incantesimo conosciuto di 1° o 2° consuma uno slot; li recuperi con riposo breve o lungo. Trucchetti, Passo Fatato e richiamo di Dagon non consumano slot.</p></section>':''}<section class="card panelcard"><h3>${e?'Incantesimi nel libro':'Incantesimi'}</h3>${e?'<p class="spell-note">Con slot lanci le magie preparate; puoi lanciare i rituali del libro anche se non preparati.</p>':''}<div class="stack">${c.spells.map(detailItem).join('')}</div></section>${c.cantrips.length?`<section class="card panelcard"><h3>Trucchetti</h3><div class="stack">${c.cantrips.map(detailItem).join('')}</div></section>`:''}<section class="card panelcard"><h3>Capacità e tratti</h3><div class="stack">${c.features.map(detailItem).join('')}</div></section><section class="card panelcard"><h3>Regole rapide della magia</h3>${quickRows([["CD e tiro per colpire","TS: il bersaglio tira contro CD "+c.spellDC+". Attacco magico: tu tiri 1d20 "+fmt(c.spellAttack)+" contro CA."],["Concentrazione","Una magia a concentrazione alla volta. Ogni danno subito: TS COS CD 10 o metà del danno, il valore maggiore. Fallimento, morte o incapacità fanno terminare l'effetto."],["Magia con azione bonus","Se lanci un incantesimo con la bonus, nello stesso turno puoi lanciare un altro incantesimo solo se è un trucchetto da 1 azione. Puoi comunque attaccare con un'arma."],["Componenti","V = verbale, S = somatica, M = materiale. Focus sostituisce i materiali senza prezzo e non consumati, quando appropriato. I materiali consumati o con costo vanno forniti."]])}</section>`}
 function detailItem(x){const tags=[x.tier,x.time||x.kind,x.toHit,x.damage].filter(Boolean);const meta=[["Costo",x.cost],["Portata",x.range],["Durata",x.duration],["Concentrazione",x.concentration],["Componenti",x.components]].filter(([,v])=>v);const more=meta.length||x.steps?.length||x.example||x.notes||x.companion;return `<article class="item action-detail${x.featured?' key-spell':''}"><div class="contentrow"><strong>${esc(x.name)}</strong><div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><p>${esc(x.desc)}</p>${more?`<details class="howto"${x.featured?' open':''}><summary>Come si usa</summary>${meta.length?`<dl class="spell-meta">${meta.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`:''}${x.steps?.length?`<ol class="action-steps">${x.steps.map(v=>`<li>${esc(v)}</li>`).join('')}</ol>`:''}${x.example?`<div class="spell-example"><b>Esempio</b><p>${esc(x.example)}</p></div>`:''}${x.notes?`<p class="spell-note"><b>Attenzione:</b> ${esc(x.notes)}</p>`:''}${x.companion?'<button type="button" class="btn sm" data-open-dagon>Apri la scheda di Dagon</button>':''}</details>`:''}</article>`}
 function quickRows(rows){return `<div class="simplelist">${rows.map(([k,v])=>`<div class="simpleitem"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join('')}</div>`}
 function renderDagon(){const d=DAGON;return `<div class="statstrip">${[["CA",13],["PF massimi",16],["Velocità","12 m"],["Percezione passiva",13],["Dadi vita","3d8"]].map(([k,v])=>`<div class="stat-tile"><span class="val">${v}</span><span class="lbl">${k}</span></div>`).join('')}</div><section class="card panelcard"><h3>Caratteristiche</h3><div class="abilities">${ABILITIES.map(([id,l],i)=>`<div class="ability"><div class="abname">${esc(l)}</div><button type="button" data-roll="${Math.floor((d.abilities[i]-10)/2)}" data-label="Dagon — ${esc(l)}">${fmt(Math.floor((d.abilities[i]-10)/2))}</button><div class="score">${d.abilities[i]}</div></div>`).join('')}</div><div style="margin-top:12px"><div class="minirow"><span>Percezione</span><button class="btn sm ghost" data-roll="3" data-label="Dagon — Percezione">+3 / tira</button></div><div class="minirow"><span>Furtività</span><button class="btn sm ghost" data-roll="4" data-label="Dagon — Furtività">+4 / tira</button></div><div class="minirow"><span>Scurovisione</span><strong>36 m</strong></div><div class="minirow"><span>Resistenza</span><strong>Necrotico</strong></div></div></section><section class="card panelcard"><h3>Attacco</h3>${detailItem(d.bite)}</section><section class="card panelcard"><h3>Comandi e protezione</h3><div class="stack">${d.commands.map(detailItem).join('')}</div><div class="spell-example"><b>Esempio di round</b><p>Gorian attacca con la propria azione e comanda Dagon con la bonus; Dagon morde nel suo turno. Se poi un nemico colpisce Dagon, Gorian usa la propria reazione e un utilizzo disponibile di Protezione. Gorian e Dagon hanno ciascuno una reazione, recuperata all'inizio del rispettivo turno.</p></div></section><section class="card panelcard"><h3>Tratti passivi</h3><div class="stack">${d.traits.map(detailItem).join('')}</div></section><section class="card panelcard"><h3>Evocazione e recupero</h3><div class="stack">${d.manifest.map(detailItem).join('')}</div></section>`}
-function renderDagonAside(){return `<div class="card panelcard"><h3>Punti ferita</h3><div class="minirow"><span>Attuali</span><strong>${state.hp.dagon===undefined||state.hp.dagon===''?'—':esc(state.hp.dagon)}</strong></div><div class="minirow"><span>PF massimi</span><strong>16</strong></div><div class="minirow"><span>Dadi vita</span><strong>3d8</strong></div><div class="minirow"><span>CA</span><strong>13</strong></div><div class="minirow"><span>Resistenza</span><strong>Necrotico</strong></div></div><div class="card panelcard"><h3>Protezione</h3>${resourceRow('gorian',{id:'protection',label:'Utilizzi di Gorian',max:2,hint:'Riposo lungo · richiede la reazione di Gorian.'})}<div class="minirow"><span>Attacchi per round</span><strong>1</strong></div><button type="button" class="btn sm" data-open-char="gorian" style="margin-top:12px;width:100%">Torna a Gorian</button></div>`}
+function renderDagonAside(){return `${hpPanel('dagon')}<div class="card panelcard tracker-panel"><h3>Risorse disponibili</h3><div class="simplelist tracker-resources">${resourceRow('gorian',{id:'protection',label:'Protezione di Dagon',max:2,hint:'2 usi per riposo lungo; richiede la reazione di Gorian.'})}${resourcesFor('dagon').map(r=>resourceRow('dagon',r,true)).join('')}</div><div class="minirow"><span>Attacchi per round</span><strong>1</strong></div><button type="button" class="btn sm" data-open-char="gorian" style="margin-top:12px;width:100%">Torna a Gorian</button></div>`;}
 function renderEquipment(c){return `<section class="card panelcard"><div class="eyebrow">Oggetti del personaggio</div><h3 style="margin-top:8px">Equipaggiamento documentato</h3><div class="equipment">${c.equipment.map(item=>`<div>${esc(item)}</div>`).join('')}</div></section>`;}
-function renderHP(c){const id=state.char;const cur=state.hp[id]??'';const temp=state.temp[id]??'';const known=cur!==''&&cur!==undefined;const width=known?Math.min(100,Math.max(0,n(cur)/c.hp*100)):0;return `<div class="card panelcard"><div class="eyebrow">Stato attuale</div><div class="hp-row" style="margin:8px 0 4px"><h3 style="margin:0">Punti ferita</h3></div><div class="hp-row"><span class="muted small">Attuali</span><strong>${known?esc(cur):'—'}</strong></div><div class="hpbar"><span style="width:${width}%"></span></div><div class="hp-row"><span class="muted small">PF massimi</span><strong>${c.hp}</strong></div><div class="hp-row"><span class="muted small">PF temporanei</span><strong>${temp===''?'—':esc(temp)}</strong></div></div>`;}
+function renderHP(c){return hpPanel(state.char);}
 function getRes(id,res){return state.resources[id]?.[res]??''}
-function resourceRow(id,r){const value=getRes(id,r.id);return `<div class="simpleitem"><div class="contentrow"><div><b>${esc(r.label)}</b><p>${esc(r.hint)}</p></div><span class="pill neutral">${value===''?'—':esc(value)} / ${r.max}</span></div></div>`;}
-function renderResourceSummary(c){return `<div class="card panelcard"><h3>Risorse rapide</h3><div class="simplelist">${c.resources.map(r=>`<div class="minirow"><span>${esc(r.label)}</span><strong>${getRes(state.char,r.id)===''?'—':getRes(state.char,r.id)} / ${r.max}</strong></div>`).join('')}</div><button type="button" class="btn sm" data-tab="magie" style="margin-top:11px;width:100%">Vedi magie e capacit\u00e0</button></div>`;}
+function resourceRow(id,r,compact=false){return `<div class="simpleitem tracker-resource${compact?' compact':''}"><div class="tracker-resource-label"><b>${esc(r.label)}</b>${compact?'':`<p>${esc(r.hint)}</p>`}</div>${trackerControl(id,r.id)}</div>`;}
+function renderResourceSummary(c){return `<div class="card panelcard tracker-panel"><h3>Risorse disponibili</h3><div class="simplelist tracker-resources">${resourcesFor(state.char).map(r=>resourceRow(state.char,r,true)).join('')}</div><button type="button" class="btn sm" data-tab="magie" style="margin-top:11px;width:100%">Vedi magie e capacità</button></div>`;}
 function renderGallery(){return `<section class="page-banner"><div class="eyebrow">WAXSKULL / GALLERIA</div><h1>Volti dell'avventura</h1><p>I protagonisti della campagna.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead"><div><div class="eyebrow">I VOSTRI PERSONAGGI</div><h2>Quattro destini</h2></div></div><div class="gallery-grid portrait-gallery">${['elara','gorian','rey','white'].map(id=>{const c=CHARACTERS[id];return `<button class="gallery-portrait" data-open-char="${id}" type="button"><span class="gallery-picture">${portrait(id)}</span><span class="gallery-bottom"><strong>${c.name}</strong><span>${esc(c.race)} &middot; ${esc(c.className)} ${c.level}</span></span></button>`}).join('')}</div>${state.gallery.length?`<div class="sectionhead"><div><div class="eyebrow">ARCHIVIO VISIVO</div><h2>Immagini dell'avventura</h2></div></div><div class="gallery-grid">${state.gallery.map(g=>`<article class="card gallerycard"><img loading="lazy" src="${g.data}" alt="${esc(g.title)}"><div class="gbody"><h3>${esc(g.title||'Immagine della campagna')}</h3>${g.caption?`<p>${esc(g.caption)}</p>`:''}</div></article>`).join('')}</div>`:''}`;}
-function handleClick(e){const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
-document.addEventListener('click',handleClick);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
+function handleClick(e){if(handleTrackStep(e))return;const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
+document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('change',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
 render();
 </script>
 </body>
