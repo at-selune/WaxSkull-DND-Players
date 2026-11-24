@@ -349,10 +349,9 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 
 
 /* WAXSKULL V4.2 — clean player-facing copy; 3 navigation tiles without the Guide. */
-.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:760px){
   .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .quick-grid>.quick-tile:last-child:nth-child(odd){grid-column:1/-1}
 }
 
 /* V4.3: schede operative, Dagon e layout responsivo */
@@ -472,6 +471,9 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 .highlight-pagination .btn{min-width:36px;min-height:36px;padding:5px 9px}
 .highlight-pagination .btn:disabled{opacity:.35;cursor:default}
 @media(max-width:760px){.home-highlights{margin:19px 0}.highlight-head{align-items:center}.highlight-grid{grid-template-columns:minmax(0,1fr);gap:9px}.highlight-card{padding:17px 15px 12px}.highlight-card blockquote p{font-size:21px}.highlight-pagination .btn{min-width:40px;min-height:44px}.highlight-head h2{font-size:26px}}
+
+/* V4.10 — two destinations, no unused gallery navigation. */
+.quick-grid>.quick-tile{min-width:0}
 </style>
 </head>
 <body>
@@ -485,7 +487,6 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
     <button type="button" class="navbtn active" data-page="home">Home</button>
     <button type="button" class="navbtn" data-page="diario">Diario</button>
     <button type="button" class="navbtn" data-page="personaggi">Personaggi</button>
-    <button type="button" class="navbtn" data-page="galleria">Galleria</button>
 
   </nav>
   <div class="headerend"><span class="header-insignia" aria-hidden="true">&#9671;</span><span class="header-end-label">PORTALE GIOCATORI</span><span class="readonly-icon" title="Sola lettura" aria-label="Sola lettura">&#9679;</span></div>
@@ -512,7 +513,7 @@ for(const [id,entries] of Object.entries(DETAILS)){for(const group of ['attacks'
 // MASTER IMAGE DATA: edit #embedded-state from the master source only (portraits, cover, gallery).
 const DEFAULT={v:1,updatedAt:0,page:'home',char:'white',tab:'statistiche',portraits:{},gallery:[],cover:'',notes:{},hp:{},temp:{},resources:{},diceText:'',recapNote:''};
 function readEmbedded(){try{return JSON.parse(document.getElementById('embedded-state').textContent||'{}')}catch(e){return {}}}
-function normalize(raw){const base=JSON.parse(JSON.stringify(DEFAULT));if(!raw||typeof raw!=='object')return base;const out={...base,...raw};for(const k of ['portraits','notes','hp','temp','resources'])if(!out[k]||typeof out[k]!=='object'||Array.isArray(out[k]))out[k]={};if(!Array.isArray(out.gallery))out.gallery=[];out.page=['home','diario','personaggi','galleria'].includes(out.page)?out.page:'home';out.char=CHARACTERS[out.char]?out.char:'white';return out;}
+function normalize(raw){const base=JSON.parse(JSON.stringify(DEFAULT));if(!raw||typeof raw!=='object')return base;const out={...base,...raw};for(const k of ['portraits','notes','hp','temp','resources'])if(!out[k]||typeof out[k]!=='object'||Array.isArray(out[k]))out[k]={};if(!Array.isArray(out.gallery))out.gallery=[];out.page=['home','diario','personaggi'].includes(out.page)?out.page:'home';out.char=CHARACTERS[out.char]?out.char:'white';return out;}
 let state=normalize(readEmbedded());
 
 // V4.6: HP starts full; consumable resources count uses spent, initially zero.
@@ -663,15 +664,14 @@ function n(v){const r=Number(v);return Number.isFinite(r)?r:0}
 function toast(t){let el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>el.classList.remove('show'),2700)}
 function portrait(id,large=false){let val=state.portraits[id];return val?`<img src="${val}" alt="Ritratto di ${esc(CHARACTERS[id].name)}">`:`<span aria-hidden="true">${esc(CHARACTERS[id].name[0])}</span>`}
 function navigate(page,char){if(page){resetDiaryView();if(page==='home')highlightPage=0;state.page=page;}if(char)state.char=char;render();window.scrollTo({top:0,behavior:'instant'})}
-function render(){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));const logo=document.getElementById('headerLogo');if(logo&&state.logo&&!logo.src.startsWith('data:'))logo.src=state.logo;const app=document.getElementById('app');app.innerHTML=state.page==='home'?renderHome():state.page==='diario'?renderDiary():state.page==='personaggi'?renderCharacters():state.page==='galleria'?renderGallery():renderHome();}
+function render(){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));const logo=document.getElementById('headerLogo');if(logo&&state.logo&&!logo.src.startsWith('data:'))logo.src=state.logo;const app=document.getElementById('app');app.innerHTML=state.page==='home'?renderHome():state.page==='diario'?renderDiary():state.page==='personaggi'?renderCharacters():renderHome();}
 function renderHome(){
  const mainStats={elara:[[3,'INT'],[1,'DES'],[2,'COS']],gorian:[[5,'CAR'],[1,'DES'],[2,'COS']],rey:[[5,'CAR'],[1,'DES'],[2,'COS']],white:[[0,'FOR'],[4,'SAG'],[2,'COS']]};
  const heroStats=(id,c)=>mainStats[id].map(([i,label])=>`<span class="wax-stat"><span class="wax-stat-inside"><strong>${c.abilities[i]}</strong><small>${label}</small></span></span>`).join('');
- const tileArt={diario:'book',personaggi:'waxhead',galleria:'map'};
+ const tileArt={diario:'book',personaggi:'waxhead'};
  const tileContent=[
   {page:'diario',meta:'01 / CRONACHE',label:'DIARIO',desc:'Le sessioni realmente giocate',symbol:'✒'},
-  {page:'personaggi',meta:'02 / AVVENTURIERI',label:'PERSONAGGI',desc:'Schede e caratteristiche',symbol:'♜'},
-  {page:'galleria',meta:'03 / IMMAGINI',label:'GALLERIA',desc:'I volti della campagna',symbol:'✧'}
+  {page:'personaggi',meta:'02 / AVVENTURIERI',label:'PERSONAGGI',desc:'Schede e caratteristiche',symbol:'♜'}
  ];
  return `<div class="home-stage wax-v4-home">
   <section class="wax-hero" aria-label="Teschi di Cera"><div class="hero-center">
@@ -793,7 +793,6 @@ function resourceRow(id,r,compact=false){
  return `<div class="simpleitem tracker-resource${compact?' compact':''}"><div class="tracker-resource-label"><b>${esc(r.label)}</b><div class="tracker-counter-mode">${label}</div>${compact?'':`<p>${esc(r.hint)}</p>`}</div>${trackerControl(id,r.id)}</div>`;
 }
 function renderResourceSummary(c){return `<div class="card panelcard tracker-panel"><h3>Risorse e utilizzi</h3><div class="simplelist tracker-resources">${resourcesFor(state.char).map(r=>resourceRow(state.char,r,true)).join('')}</div><button type="button" class="btn sm" data-tab="magie" style="margin-top:11px;width:100%">Vedi magie e capacità</button></div>`;}
-function renderGallery(){return `<section class="page-banner"><div class="eyebrow">WAXSKULL / GALLERIA</div><h1>Volti dell'avventura</h1><p>I protagonisti della campagna.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead"><div><div class="eyebrow">I VOSTRI PERSONAGGI</div><h2>Quattro destini</h2></div></div><div class="gallery-grid portrait-gallery">${['elara','gorian','rey','white'].map(id=>{const c=CHARACTERS[id];return `<button class="gallery-portrait" data-open-char="${id}" type="button"><span class="gallery-picture">${portrait(id)}</span><span class="gallery-bottom"><strong>${c.name}</strong><span>${esc(c.race)} &middot; ${esc(c.className)} ${c.level}</span></span></button>`}).join('')}</div>${state.gallery.length?`<div class="sectionhead"><div><div class="eyebrow">ARCHIVIO VISIVO</div><h2>Immagini dell'avventura</h2></div></div><div class="gallery-grid">${state.gallery.map(g=>`<article class="card gallerycard"><img loading="lazy" src="${g.data}" alt="${esc(g.title)}"><div class="gbody"><h3>${esc(g.title||'Immagine della campagna')}</h3>${g.caption?`<p>${esc(g.caption)}</p>`:''}</div></article>`).join('')}</div>`:''}`;}
 function handleClick(e){if(handleHighlightClick(e)||handleDiaryClick(e)||handleTrackReset(e)||handleTrackStep(e))return;const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
 document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('input',handleDiaryInput);document.addEventListener('change',handleTrackInput);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
 render();
