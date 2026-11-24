@@ -448,11 +448,10 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 .diary-combat summary,.diary-round summary{cursor:pointer;font-size:14px;font-weight:bold;color:#e8c28b;line-height:1.4;padding:4px 0}
 .diary-combat>p{margin-top:12px}
 .diary-round{background:#1d1315;margin-top:8px}
-.diary-round ul,.diary-questions{padding-left:19px;margin:10px 0 0}
-.diary-round li,.diary-questions li{margin:6px 0}
+.diary-round ul{padding-left:19px;margin:10px 0 0}
+.diary-round li{margin:6px 0}
 .diary-outcome{border-left:2px solid #a87a46;padding-left:10px}
 .diary-side h3{font-size:22px;margin-bottom:13px}
-.diary-questions{font-size:13px;line-height:1.55;color:#d7c4a7}
 .diary-loading h3{margin-top:18px}
 @media(max-width:1000px){.diary-reader-grid{grid-template-columns:minmax(0,1fr)}.diary-aside{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.diary-feature{padding:20px 16px}.diary-entry{grid-template-columns:28px minmax(0,1fr) 14px;gap:10px;padding:13px 10px}.diary-entry-copy strong{font-size:19px}.diary-summary{font-size:12px}.diary-book{font-size:23px}.diary-toc{grid-template-columns:minmax(0,1fr)}.diary-aside{grid-template-columns:minmax(0,1fr)}.diary-chapter h3{font-size:21px}.diary-chapter p,.diary-chapter li{font-size:14px}.diary-reader-nav{justify-content:center}.diary-reader-nav>span:empty{display:none}.diary-reader-nav .btn{white-space:normal}.diary-chapter-head{gap:10px}}
@@ -738,7 +737,7 @@ function diaryNav(id){
  return `<nav class="diary-reader-nav" aria-label="Navigazione delle sessioni">${older?`<button type="button" class="btn" data-diary-session="${esc(older.id)}">← Sessione precedente</button>`:'<span></span>'}<button type="button" class="btn" data-diary-archive>Tutte le sessioni</button>${newer?`<button type="button" class="btn" data-diary-session="${esc(newer.id)}">Sessione successiva →</button>`:'<span></span>'}</nav>`;
 }
 function renderDiaryDetail(s){
- return `<div class="diary-reader"><button type="button" class="btn sm" data-diary-archive>← Tutte le sessioni</button><div class="sectionhead"><div><div class="eyebrow">CRONACA · ${esc(s.date)}</div><h2>${esc(s.title)}</h2></div></div><div class="layout2 diary-reader-grid"><article class="card storycard diary-story"><p class="storyintro">${esc(s.intro)}</p><div class="gold-rule"></div><nav class="diary-toc" aria-label="Indice del resoconto">${s.sections.map((sec,i)=>`<button type="button" data-diary-section="${i}">${i+1}. ${esc(sec.title)}</button>`).join('')}</nav><div class="diary-timeline">${s.sections.map((sec,i)=>`<section class="diary-chapter" id="diary-section-${i}"><div class="diary-chapter-head"><span class="stepbadge">${i+1}</span><h3>${esc(sec.title)}</h3></div>${sec.paragraphs.map(p=>`<p>${esc(p)}</p>`).join('')}${diaryCombat(sec.combat)}</section>`).join('')}</div></article><aside class="stack diary-aside">${diaryListBox('Dove siete rimasti',s.end)}${diaryListBox('Oggetti recuperati',s.objects)}${diaryListBox('Indizi e scoperte',s.clues)}${s.questions?.length?`<section class="card at-glance diary-side"><h3>Questioni aperte</h3><ul class="diary-questions">${s.questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></section>`:''}</aside></div>${diaryNav(s.id)}</div>`;
+ return `<div class="diary-reader"><button type="button" class="btn sm" data-diary-archive>← Tutte le sessioni</button><div class="sectionhead"><div><div class="eyebrow">CRONACA · ${esc(s.date)}</div><h2>${esc(s.title)}</h2></div></div><div class="layout2 diary-reader-grid"><article class="card storycard diary-story"><p class="storyintro">${esc(s.intro)}</p><div class="gold-rule"></div><nav class="diary-toc" aria-label="Indice del resoconto">${s.sections.map((sec,i)=>`<button type="button" data-diary-section="${i}">${i+1}. ${esc(sec.title)}</button>`).join('')}</nav><div class="diary-timeline">${s.sections.map((sec,i)=>`<section class="diary-chapter" id="diary-section-${i}"><div class="diary-chapter-head"><span class="stepbadge">${i+1}</span><h3>${esc(sec.title)}</h3></div>${sec.paragraphs.map(p=>`<p>${esc(p)}</p>`).join('')}${diaryCombat(sec.combat)}</section>`).join('')}</div></article><aside class="stack diary-aside">${diaryListBox('Dove siete rimasti',s.end)}${diaryListBox('Oggetti recuperati',s.objects)}${diaryListBox('Indizi e scoperte',s.clues)}</aside></div>${diaryNav(s.id)}</div>`;
 }
 function renderDiary(){
  if(!diarySession)return renderDiaryIndex();
