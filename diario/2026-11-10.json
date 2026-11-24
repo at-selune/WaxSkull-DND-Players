@@ -1,0 +1,82 @@
+{
+  "id": "2026-11-10",
+  "date": "10 novembre 2026",
+  "title": "La galleria e il campo devastato",
+  "summary": "Dopo la stanza nascosta e lo scontro con quattro scheletri, il gruppo è riunito. Oltre la galleria: un accampamento distrutto, i morti e le braci ancora ardenti.",
+  "intro": "Elara cerca Altea nella galleria, mentre White, Rey e Gorian si ricongiungono. Il richiamo di Elara attraverso la galleria e un varco nascosto cambiano il corso del viaggio.",
+  "sections": [
+    {
+      "title": "Il gruppo si ritrova",
+      "paragraphs": [
+        "Elara raggiunge l'uscita della galleria senza trovare Altea e la chiama ad alta voce, storpiandone il nome in «Albenga». Rey, White e Gorian sentono il richiamo e si dirigono verso di lei."
+      ]
+    },
+    {
+      "title": "La parete nascosta",
+      "paragraphs": [
+        "White recupera 10 pezzi d'ossidiana da una roccia spezzata. Dopo aver chiamato Altea in una rientranza sente la voce ovattata di Elara che chiama dalla parte opposta della galleria. Rey nota una melma mimetizzata con la parete; White la distrugge, aprendo l'accesso a una camera laterale."
+      ]
+    },
+    {
+      "title": "Una scoperta inquietante",
+      "paragraphs": [
+        "Dietro il varco si distinguono i piedi e parte delle gambe di Altea. Il resto del corpo è nascosto sotto un enorme masso."
+      ]
+    },
+    {
+      "title": "Quattro scheletri",
+      "paragraphs": [
+        "Il rumore risveglia quattro scheletri, alcuni provenienti da fessure nascoste nella parete. L'odore dei cadaveri emerge dopo la distruzione della melma. Tre scheletri vengono distrutti; White intrappola il quarto facendo crollare la fessura del muro che era coperta dalla melma."
+      ]
+    },
+    {
+      "title": "Di nuovo insieme",
+      "paragraphs": [
+        "Gorian racconta agli altri quanto ha vissuto durante la separazione e indica Vibruyl come sua meta. Elara recupera il proprio bastone magico, precedentemente raccolto da White."
+      ]
+    },
+    {
+      "title": "Il campo devastato",
+      "paragraphs": [
+        "Usciti dalla galleria, i quattro raggiungono un accampamento distrutto. Vedono corpi senza vita e un focolare spento con braci ancora ardenti."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "who": "White",
+      "text": "10 pezzi d'ossidiana."
+    },
+    {
+      "who": "Elara",
+      "text": "Il proprio bastone magico, restituito da White."
+    }
+  ],
+  "clues": [
+    {
+      "title": "La camera nascosta",
+      "text": "Una melma mimetizzata copriva il varco. Dietro si trovano le gambe di Altea e il masso."
+    },
+    {
+      "title": "L'accampamento",
+      "text": "I corpi senza vita e le braci ancora ardenti sono visibili all'uscita della galleria."
+    }
+  ],
+  "questions": [
+    "Che cosa è accaduto al campo?"
+  ],
+  "end": [
+    {
+      "title": "Posizione",
+      "text": "Accampamento distrutto, oltre la galleria montana. Non avete ancora esaminato in dettaglio la scena."
+    },
+    {
+      "title": "Compagni presenti",
+      "text": "White, Gorian, Rey, Elara. Il gruppo è finalmente riunito."
+    }
+  ],
+  "quote": {
+    "text": "Mi son sempre piaciuti i secchi",
+    "speaker": "Rey, rivolgendosi a uno scheletro durante il combattimento."
+  }
+}

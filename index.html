@@ -414,6 +414,48 @@ body{background-image:radial-gradient(ellipse 36% 21% at 45% 1%,#3d211b33,transp
 .tracker-counter-mode{font-size:11px;line-height:1.4;margin-top:4px;color:#c0aa8d;overflow-wrap:anywhere}
 .tracker-counter-mode strong{color:#9bc6ac}
 .tracker-reset{margin-top:12px;max-width:100%;white-space:normal}
+
+/* V4.7 — archive and single-session reader, within the wax-and-gold design. */
+.diary-feature{margin:0 0 24px;padding:24px 28px;border-color:#a57a47;background:radial-gradient(ellipse at 85% 20%,#61322b35,transparent 60%),linear-gradient(130deg,#28171b,#130e10);box-shadow:inset 0 0 0 4px #0d090b}
+.diary-feature h2{color:#f0dcb8;margin:9px 0 10px;font-size:clamp(25px,3vw,36px)}
+.diary-feature p{color:#d2bda3;line-height:1.7;max-width:800px;margin-bottom:16px}
+.diary-search-label{display:block;font-size:12px;color:#d7ba94;margin:0 0 7px}
+.diary-search{width:min(100%,520px);background:#140f11;color:#f4e1c0;border:1px solid #8a6540;border-radius:2px;font-size:14px}
+.diary-result-count{font-size:11px;color:#c4aa89;margin:12px 0}
+.diary-list{display:grid;gap:9px}
+.diary-entry{display:grid;grid-template-columns:42px minmax(0,1fr) 18px;align-items:center;gap:15px;padding:16px 19px;text-align:left;background:linear-gradient(120deg,#211619,#100c0e);border:1px solid #795733;color:#f2dfbd;min-width:0;width:100%}
+.diary-entry:hover{border-color:#dbb06e;background:#2d191b}
+.diary-book{font-size:29px;color:#d5af71;text-align:center}
+.diary-entry-copy{display:grid;gap:5px;min-width:0}
+.diary-entry-copy strong{font:normal 22px/1.2 Georgia,serif;overflow-wrap:anywhere}
+.diary-summary{font-size:13px;color:#cdb79c;line-height:1.5;overflow-wrap:anywhere}
+.diary-chevron{color:#e0b875;font-size:26px}
+.diary-pagination,.diary-reader-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#cdb79c}
+.diary-reader{min-width:0}
+.diary-reader-grid{grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);align-items:start;gap:20px}
+.diary-story,.diary-aside,.diary-side{min-width:0}
+.diary-toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;margin:0 0 22px;padding:11px;border:1px solid #63482e;background:#120d0e}
+.diary-toc button{color:#e0bc85;background:transparent;border:0;text-align:left;line-height:1.4;padding:6px 5px;overflow-wrap:anywhere}
+.diary-toc button:hover{text-decoration:underline}
+.diary-chapter{scroll-margin-top:112px;padding:18px 0;border-bottom:1px solid #61472f}
+.diary-chapter:last-child{border:0;padding-bottom:0}
+.diary-chapter-head{display:flex;align-items:center;gap:15px;margin:0 0 12px}
+.diary-chapter-head .stepbadge{flex:0 0 30px;width:30px;height:30px;transform:none}
+.diary-chapter h3{font:normal 24px/1.25 Georgia,serif;margin:0;color:#f4dfbd}
+.diary-chapter p,.diary-chapter li{font-size:14px;line-height:1.78;color:#d9c9b1;overflow-wrap:anywhere}
+.diary-chapter p{margin:0 0 12px}
+.diary-combat,.diary-round{border:1px solid #745134;background:#160f11;padding:12px;margin-top:12px}
+.diary-combat summary,.diary-round summary{cursor:pointer;font-size:14px;font-weight:bold;color:#e8c28b;line-height:1.4;padding:4px 0}
+.diary-combat>p{margin-top:12px}
+.diary-round{background:#1d1315;margin-top:8px}
+.diary-round ul,.diary-questions{padding-left:19px;margin:10px 0 0}
+.diary-round li,.diary-questions li{margin:6px 0}
+.diary-outcome{border-left:2px solid #a87a46;padding-left:10px}
+.diary-side h3{font-size:22px;margin-bottom:13px}
+.diary-questions{font-size:13px;line-height:1.55;color:#d7c4a7}
+.diary-loading h3{margin-top:18px}
+@media(max-width:1000px){.diary-reader-grid{grid-template-columns:minmax(0,1fr)}.diary-aside{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.diary-feature{padding:20px 16px}.diary-entry{grid-template-columns:28px minmax(0,1fr) 14px;gap:10px;padding:13px 10px}.diary-entry-copy strong{font-size:19px}.diary-summary{font-size:12px}.diary-book{font-size:23px}.diary-toc{grid-template-columns:minmax(0,1fr)}.diary-aside{grid-template-columns:minmax(0,1fr)}.diary-chapter h3{font-size:21px}.diary-chapter p,.diary-chapter li{font-size:14px}.diary-reader-nav{justify-content:center}.diary-reader-nav>span:empty{display:none}.diary-reader-nav .btn{white-space:normal}.diary-chapter-head{gap:10px}}
 </style>
 </head>
 <body>
@@ -604,7 +646,7 @@ function fmt(v){if(v===null||v===undefined||v==='')return '\u2014';return Number
 function n(v){const r=Number(v);return Number.isFinite(r)?r:0}
 function toast(t){let el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>el.classList.remove('show'),2700)}
 function portrait(id,large=false){let val=state.portraits[id];return val?`<img src="${val}" alt="Ritratto di ${esc(CHARACTERS[id].name)}">`:`<span aria-hidden="true">${esc(CHARACTERS[id].name[0])}</span>`}
-function navigate(page,char){if(page)state.page=page;if(char)state.char=char;render();window.scrollTo({top:0,behavior:'instant'})}
+function navigate(page,char){if(page){resetDiaryView();state.page=page;}if(char)state.char=char;render();window.scrollTo({top:0,behavior:'instant'})}
 function render(){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));const logo=document.getElementById('headerLogo');if(logo&&state.logo&&!logo.src.startsWith('data:'))logo.src=state.logo;const app=document.getElementById('app');app.innerHTML=state.page==='home'?renderHome():state.page==='diario'?renderDiary():state.page==='personaggi'?renderCharacters():state.page==='galleria'?renderGallery():renderHome();}
 function renderHome(){
  const mainStats={elara:[[3,'INT'],[1,'DES'],[2,'COS']],gorian:[[5,'CAR'],[1,'DES'],[2,'COS']],rey:[[5,'CAR'],[1,'DES'],[2,'COS']],white:[[0,'FOR'],[4,'SAG'],[2,'COS']]};
@@ -623,23 +665,85 @@ function renderHome(){
    <p>CAMPAGNA D&amp;D NELL'UNIVERSO WAXSKULL</p>
   </div></section>
   <section class="party-cards" aria-label="I quattro protagonisti">${['elara','gorian','rey','white'].map(id=>{const c=CHARACTERS[id];return `<button class="party-card party-${id}" type="button" data-open-char="${id}" aria-label="Apri la scheda di ${c.name}"><span class="party-photo">${portrait(id)}</span><span class="party-data"><span class="party-name">${esc(c.name)}</span><span class="party-role">${esc(c.className)} · Livello ${c.level}</span><span class="party-race">${esc(c.race)}</span><span class="party-figures" aria-label="Tre caratteristiche del personaggio">${heroStats(id,c)}</span><span class="party-meta">CA ${c.ac} <span class="wax-dot">◆</span> PF MAX ${c.hp}</span></span></button>`}).join('')}</section>
-  <section class="session-feature" aria-label="Ultima sessione giocata"><div class="session-seal" aria-hidden="true"></div><div class="session-info"><span class="eyebrow">ULTIMA SESSIONE <span class="wax-diamond">◆</span> 10 NOVEMBRE 2026</span><h2>La galleria e il campo devastato</h2><p>Dopo la stanza nascosta e lo scontro con quattro scheletri, il gruppo è riunito. Oltre la galleria: un accampamento distrutto, i morti e le braci ancora ardenti.</p></div><div class="session-art" aria-hidden="true"></div><button class="btn wax-button" type="button" data-page="diario">LEGGI IL RESOCONTO <span aria-hidden="true">⟶</span></button></section>
+  ${DIARY_INDEX.length?`<section class="session-feature" aria-label="Ultima sessione giocata"><div class="session-seal" aria-hidden="true"></div><div class="session-info"><span class="eyebrow">ULTIMA SESSIONE <span class="wax-diamond">◆</span> ${esc(DIARY_INDEX[0].date.toLocaleUpperCase('it'))}</span><h2>${esc(DIARY_INDEX[0].title)}</h2><p>${esc(DIARY_INDEX[0].summary)}</p></div><div class="session-art" aria-hidden="true"></div><button class="btn wax-button" type="button" data-diary-session="${esc(DIARY_INDEX[0].id)}">LEGGI IL RESOCONTO <span aria-hidden="true">⟶</span></button></section>`:''}
   <section class="quick-grid" aria-label="Esplora il portale">${tileContent.map(t=>`<button type="button" class="quick-tile quick-${t.page}" data-page="${t.page}"><span class="tile-photo tile-art-${tileArt[t.page]}" aria-hidden="true"></span><span class="tile-panel"><span class="tile-icon" aria-hidden="true">${t.symbol}</span><span class="tile-name">${t.label}</span><span class="tile-sub">${t.desc}</span><span class="tile-arrow" aria-hidden="true">›</span></span></button>`).join('')}</section>
   <div class="home-ornament" aria-hidden="true"><span>◆</span></div>
   
  </div>`;
 }
 
-function renderDiary(){return `<section class="page-banner diary-banner"><div class="eyebrow">WAXSKULL / DIARIO</div><h1>Le cronache del gruppo</h1><p>Le cronache del vostro viaggio.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead"><div><div class="eyebrow">Cronaca / Sessione 10.11.2026</div><h2>Quello che avete vissuto</h2></div></div>
-<div class="layout2"><article class="card storycard"><div class="eyebrow">Ultima sessione</div><h3>Tra le pareti della montagna</h3><p class="storyintro">Elara cerca Altea nella galleria, mentre White, Rey e Gorian si ricongiungono. Il richiamo di Elara attraverso la galleria e un varco nascosto cambiano il corso del viaggio.</p><div class="gold-rule"></div>
-<div class="timeline"><div class="step"><span class="stepbadge">1</span><div class="steptext"><strong>Il gruppo si ritrova</strong><p>Elara raggiunge l'uscita della galleria senza trovare Altea e la chiama ad alta voce, storpiandone il nome in \u00abAlbenga\u00bb. Rey, White e Gorian sentono il richiamo e si dirigono verso di lei.</p></div></div>
-<div class="step"><span class="stepbadge">2</span><div class="steptext"><strong>La parete nascosta</strong><p>White recupera 10 pezzi d'ossidiana da una roccia spezzata. Dopo aver chiamato Altea in una rientranza sente la voce ovattata di Elara che chiama dalla parte opposta della galleria. Rey nota una melma mimetizzata con la parete; White la distrugge, aprendo l'accesso a una camera laterale.</p></div></div>
-<div class="step"><span class="stepbadge">3</span><div class="steptext"><strong>Una scoperta inquietante</strong><p>Dietro il varco si distinguono i piedi e parte delle gambe di Altea. Il resto del corpo \u00e8 nascosto sotto un enorme masso.</p></div></div>
-<div class="step"><span class="stepbadge">4</span><div class="steptext"><strong>Quattro scheletri</strong><p>Il rumore risveglia quattro scheletri, alcuni provenienti da fessure nascoste nella parete. L'odore dei cadaveri emerge dopo la distruzione della melma. Tre scheletri vengono distrutti; White intrappola il quarto facendo crollare la fessura del muro che era coperta dalla melma.</p></div></div>
-<div class="step"><span class="stepbadge">5</span><div class="steptext"><strong>Di nuovo insieme</strong><p>Gorian racconta agli altri quanto ha vissuto durante la separazione e indica Vibruyl come sua meta. Elara recupera il proprio bastone magico, precedentemente raccolto da White.</p></div></div>
-<div class="step"><span class="stepbadge">6</span><div class="steptext"><strong>Il campo devastato</strong><p>Usciti dalla galleria, i quattro raggiungono un accampamento distrutto. Vedono corpi senza vita e un focolare spento con braci ancora ardenti.</p></div></div></div></article>
-<aside class="stack"><div class="card at-glance"><div class="eyebrow">Dove siete rimasti</div><h3 style="margin:8px 0 12px">Il prossimo passo \u00e8 vostro</h3><div class="simplelist"><div class="simpleitem"><b>Posizione</b><p>Accampamento distrutto, oltre la galleria montana. Non avete ancora esaminato in dettaglio la scena.</p></div><div class="simpleitem"><b>Compagni presenti</b><p>White, Gorian, Rey, Elara. Il gruppo \u00e8 finalmente riunito.</p></div><div class="simpleitem"><b>Questioni aperte</b><p>Che cosa \u00e8 accaduto al campo?</p></div></div></div><div class="card at-glance"><div class="eyebrow">Momento della serata</div><h3 style="margin:8px 0 11px">\u00abMi son sempre piaciuti i secchi\u00bb</h3><p class="muted" style="line-height:1.7;font-size:12px">Rey, rivolgendosi a uno scheletro durante il combattimento.</p></div></aside></div>
-`;}
+
+/* V4.7 — session archive. Index only at startup; load one session on demand. */
+const DIARY_INDEX=[{"id":"2026-11-18","date":"18 novembre 2026","title":"I segugi della notte","summary":"L'esplorazione dell'accampamento, una frattura nella realtà, lo scontro con tre creature d'ombra e una misteriosa scoperta sotto un carro."},{"id":"2026-11-10","date":"10 novembre 2026","title":"La galleria e il campo devastato","summary":"Dopo la stanza nascosta e lo scontro con quattro scheletri, il gruppo è riunito. Oltre la galleria: un accampamento distrutto, i morti e le braci ancora ardenti."}].sort((a,b)=>b.id.localeCompare(a.id));
+const DIARY_PAGE_SIZE=10;
+let diarySession='',diaryQuery='',diaryPage=0,diaryDetail=null,diaryError=false,diaryRequest=0;
+function diaryNorm(value){return String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('it').trim();}
+function diaryMatches(query){
+ const terms=diaryNorm(query).split(/\s+/).filter(Boolean);
+ return DIARY_INDEX.filter(x=>{const hay=diaryNorm([x.title,x.date,x.id,x.id.split('-').reverse().join('/'),x.id.split('-').reverse().join('.'),x.summary].join(' '));return terms.every(t=>hay.includes(t));});
+}
+function diaryBanner(){return '<section class="page-banner diary-banner"><div class="eyebrow">WAXSKULL / DIARIO</div><h1>Le cronache del gruppo</h1><p>Le cronache del vostro viaggio.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section>';}
+function diaryIndexRows(){
+ const matches=diaryMatches(diaryQuery),pages=Math.max(1,Math.ceil(matches.length/DIARY_PAGE_SIZE));
+ diaryPage=Math.max(0,Math.min(diaryPage,pages-1));
+ const rows=matches.slice(diaryPage*DIARY_PAGE_SIZE,(diaryPage+1)*DIARY_PAGE_SIZE);
+ return `<div class="diary-result-count">${matches.length} ${matches.length===1?'sessione':'sessioni'}</div><div class="diary-list">${rows.length?rows.map(x=>`<button type="button" class="diary-entry" data-diary-session="${esc(x.id)}"><span class="diary-book" aria-hidden="true">✒</span><span class="diary-entry-copy"><span class="eyebrow">${esc(x.date)}${x.id===DIARY_INDEX[0]?.id?' · ULTIMA SESSIONE':''}</span><strong>${esc(x.title)}</strong><span class="diary-summary">${esc(x.summary)}</span></span><span class="diary-chevron" aria-hidden="true">›</span></button>`).join(''):'<p class="muted diary-empty">Nessuna sessione corrispondente alla ricerca.</p>'}</div>${pages>1?`<div class="diary-pagination"><button type="button" class="btn sm" data-diary-list-page="${diaryPage-1}"${diaryPage===0?' disabled':''}>← Precedente</button><span>Pagina ${diaryPage+1} di ${pages}</span><button type="button" class="btn sm" data-diary-list-page="${diaryPage+1}"${diaryPage===pages-1?' disabled':''}>Successiva →</button></div>`:''}`;
+}
+function renderDiaryIndex(){
+ const latest=DIARY_INDEX[0];
+ return diaryBanner()+`${latest?`<section class="diary-feature card"><div class="eyebrow">ULTIMA SESSIONE · ${esc(latest.date)}</div><h2>${esc(latest.title)}</h2><p>${esc(latest.summary)}</p><button type="button" class="btn gold" data-diary-session="${esc(latest.id)}">Leggi il resoconto completo →</button></section>`:''}<section class="diary-archive"><div class="sectionhead"><div><div class="eyebrow">ARCHIVIO</div><h2>Tutte le sessioni</h2></div></div><label for="diary-search" class="diary-search-label">Cerca per titolo o data</label><input type="search" id="diary-search" class="diary-search" placeholder="Es. segugi, 18 novembre…" value="${esc(diaryQuery)}" autocomplete="off"><div id="diary-results" aria-live="polite">${diaryIndexRows()}</div></section>`;
+}
+function diaryListBox(title,entries){
+ if(!Array.isArray(entries)||!entries.length)return '';
+ return `<section class="card at-glance diary-side"><h3>${esc(title)}</h3><div class="simplelist">${entries.map(x=>`<div class="simpleitem"><b>${esc(x.title||x.who||'')}</b><p>${esc(x.text)}</p></div>`).join('')}</div></section>`;
+}
+function diaryCombat(c){
+ if(!c)return '';
+ return `<details class="diary-combat"><summary>Combattimento — tutti i round</summary><p>${esc(c.intro)}</p>${c.rounds.map(r=>`<details class="diary-round"><summary>${esc(r.title)}</summary><ul>${r.events.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>`).join('')}<p class="diary-outcome">${esc(c.outcome)}</p></details>`;
+}
+function diaryNav(id){
+ const at=DIARY_INDEX.findIndex(x=>x.id===id),older=DIARY_INDEX[at+1],newer=at>0?DIARY_INDEX[at-1]:null;
+ return `<nav class="diary-reader-nav" aria-label="Navigazione delle sessioni">${older?`<button type="button" class="btn" data-diary-session="${esc(older.id)}">← Sessione precedente</button>`:'<span></span>'}<button type="button" class="btn" data-diary-archive>Tutte le sessioni</button>${newer?`<button type="button" class="btn" data-diary-session="${esc(newer.id)}">Sessione successiva →</button>`:'<span></span>'}</nav>`;
+}
+function renderDiaryDetail(s){
+ return `<div class="diary-reader"><button type="button" class="btn sm" data-diary-archive>← Tutte le sessioni</button><div class="sectionhead"><div><div class="eyebrow">CRONACA · ${esc(s.date)}</div><h2>${esc(s.title)}</h2></div></div><div class="layout2 diary-reader-grid"><article class="card storycard diary-story"><p class="storyintro">${esc(s.intro)}</p><div class="gold-rule"></div><nav class="diary-toc" aria-label="Indice del resoconto">${s.sections.map((sec,i)=>`<button type="button" data-diary-section="${i}">${i+1}. ${esc(sec.title)}</button>`).join('')}</nav><div class="diary-timeline">${s.sections.map((sec,i)=>`<section class="diary-chapter" id="diary-section-${i}"><div class="diary-chapter-head"><span class="stepbadge">${i+1}</span><h3>${esc(sec.title)}</h3></div>${sec.paragraphs.map(p=>`<p>${esc(p)}</p>`).join('')}${diaryCombat(sec.combat)}</section>`).join('')}</div></article><aside class="stack diary-aside">${diaryListBox('Dove siete rimasti',s.end)}${diaryListBox('Oggetti recuperati',s.objects)}${diaryListBox('Indizi e scoperte',s.clues)}${s.questions?.length?`<section class="card at-glance diary-side"><h3>Questioni aperte</h3><ul class="diary-questions">${s.questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></section>`:''}${s.quote?`<section class="card at-glance diary-side"><div class="eyebrow">MOMENTO DELLA SERATA</div><h3>«${esc(s.quote.text)}»</h3><p class="muted">${esc(s.quote.speaker)}</p></section>`:''}</aside></div>${diaryNav(s.id)}</div>`;
+}
+function renderDiary(){
+ if(!diarySession)return renderDiaryIndex();
+ const entry=DIARY_INDEX.find(x=>x.id===diarySession);
+ if(!entry)return renderDiaryIndex();
+ if(diaryDetail?.id===diarySession)return diaryBanner()+renderDiaryDetail(diaryDetail);
+ return diaryBanner()+`<section class="card storycard diary-loading"><button type="button" class="btn sm" data-diary-archive>← Tutte le sessioni</button><h3>${esc(entry.title)}</h3><p role="status">${diaryError?'Non è stato possibile caricare la cronaca.':'Caricamento della cronaca…'}</p>${diaryError?`<button type="button" class="btn" data-diary-session="${esc(entry.id)}">Riprova</button>`:''}</section>`;
+}
+function resetDiaryView(){diaryRequest++;diarySession='';diaryDetail=null;diaryError=false;diaryQuery='';diaryPage=0;}
+function openDiaryArchive(){resetDiaryView();state.page='diario';render();window.scrollTo({top:0,behavior:'instant'});}
+async function openDiarySession(id){
+ const entry=DIARY_INDEX.find(x=>x.id===id);if(!entry)return false;
+ const request=++diaryRequest;diarySession=id;diaryDetail=null;diaryError=false;state.page='diario';render();window.scrollTo({top:0,behavior:'instant'});
+ try{
+  const res=await fetch('diario/'+entry.id+'.json',{cache:'no-cache'});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const data=await res.json();
+  if(data.id!==id||!Array.isArray(data.sections)||!data.sections.length||!data.sections.every(s=>Array.isArray(s.paragraphs)))throw Error('Cronaca non valida');
+  if(request!==diaryRequest||state.page!=='diario'||diarySession!==id)return false;
+  diaryDetail=data;render();return true;
+ }catch(e){
+  if(request===diaryRequest&&state.page==='diario'&&diarySession===id){diaryError=true;render();}
+  return false;
+ }
+}
+function handleDiaryInput(e){
+ if(e.target.id!=='diary-search')return;
+ diaryQuery=e.target.value;diaryPage=0;const out=document.getElementById('diary-results');if(out)out.innerHTML=diaryIndexRows();
+}
+function handleDiaryClick(e){
+ const s=e.target.closest('[data-diary-session]');if(s){openDiarySession(s.dataset.diarySession);return true;}
+ const a=e.target.closest('[data-diary-archive]');if(a){openDiaryArchive();return true;}
+ const p=e.target.closest('[data-diary-list-page]');if(p){if(!p.disabled){diaryPage=Number(p.dataset.diaryListPage)||0;const el=document.getElementById('diary-results');if(el)el.innerHTML=diaryIndexRows();}return true;}
+ const j=e.target.closest('[data-diary-section]');if(j){document.getElementById('diary-section-'+j.dataset.diarySection)?.scrollIntoView({block:'start',behavior:'smooth'});return true;}
+ return false;
+}
+
 function charPageTabs(){const tabs=[["statistiche","Statistiche"],["combattimento","Combattimento"],["magie","Magie e capacità"],["equipaggiamento","Equipaggiamento"]];if(state.char==="gorian")tabs.push(["dagon","Dagon"]);return tabs.map(([t,label])=>`<button type="button" class="tab ${state.tab===t?'active':''}" data-tab="${t}">${label}</button>`).join('')}
 function renderCharacters(){const c=CHARACTERS[state.char],dog=state.char==="gorian"&&state.tab==="dagon";const head=dog?`<div class="sheethead dagon-head"><div class="portrait dagon-mark" aria-hidden="true">D</div><div><div class="eyebrow">Famiglio di Gorian</div><h1>Dagon</h1><p>Manifestazione d'Ombra · Mostruosità · Taglia Media</p><p>Compagno di Gorian, Patto della Catena.</p></div></div>`:`<div class="sheethead"><div class="portrait" aria-label="Ritratto di ${esc(c.name)}">${portrait(state.char)}</div><div><div class="eyebrow">Scheda del personaggio / Livello ${c.level}</div><h1>${esc(c.name)}</h1><p>${esc(c.race)} · ${esc(c.className)} / ${esc(c.subclass)}</p><p>${esc(c.bio)}</p>${state.char==='gorian'?'<button class="btn sm" type="button" data-open-dagon>Vedi Dagon</button>':''}</div></div>`;return `<section class="page-banner character-banner"><div class="eyebrow">WAXSKULL / PERSONAGGI</div><h1>Gli avventurieri</h1><p>Quattro storie, quattro destini.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead" style="margin-top:0"><div><div class="eyebrow">Archivio del gruppo</div><h2>Le schede dei personaggi</h2></div></div><div class="char-layout"><aside class="sidebar"><div class="eyebrow">Scegli un personaggio</div><div class="people">${Object.entries(CHARACTERS).map(([id,ch])=>`<button type="button" class="personbtn ${id===state.char&&!dog?'active':''}" data-open-char="${id}"><span class="smallportrait">${portrait(id)}</span><span><strong>${esc(ch.name)}</strong><small>${esc(ch.className)} ${ch.level}</small></span></button>`).join('')}<button type="button" class="personbtn companion-link ${dog?'active':''}" data-open-dagon><span class="smallportrait dagon-mark" aria-hidden="true">D</span><span><strong>Dagon</strong><small>Famiglio di Gorian</small></span></button></div></aside><section class="sheet">${head}<div class="sheettabs">${charPageTabs()}</div><div class="sheetgrid"><div class="sheetmain stack">${dog?renderDagon():state.tab==='statistiche'?renderStats(c):state.tab==='combattimento'?renderCombat(c):state.tab==='magie'?renderMagic(c):renderEquipment(c)}</div><aside class="infoaside">${dog?renderDagonAside():renderHP(c)+renderResourceSummary(c)}</aside></div></section></div>`}
 function renderStats(c){return `<div class="statstrip"><div class="stat-tile"><span class="val">${c.ac}</span><span class="lbl">Classe Armatura</span></div><div class="stat-tile"><span class="val">${c.ini===null?'?':fmt(c.ini)}</span><span class="lbl">Iniziativa</span></div><div class="stat-tile"><span class="val">${c.speed===null?'?':c.speed+' m'}</span><span class="lbl">Velocit\u00e0</span></div><div class="stat-tile"><span class="val">${c.passive}</span><span class="lbl">Percezione passiva</span></div><div class="stat-tile"><span class="val">+${c.prof}</span><span class="lbl">Competenza</span></div></div><section class="card panelcard"><div class="contentrow"><h3>Caratteristiche</h3></div><div class="abilities">${ABILITIES.map(([id,label],idx)=>`<div class="ability"><div class="abname">${label}</div><button type="button" data-roll="${Math.floor((c.abilities[idx]-10)/2)}" data-label="${label}" title="Tira 1d20 ${fmt(Math.floor((c.abilities[idx]-10)/2))}">${fmt(Math.floor((c.abilities[idx]-10)/2))}</button><div class="score">${c.abilities[idx]}</div></div>`).join('')}</div><div class="dicebox"><div><div class="eyebrow">Tiro rapido</div><div class="small muted">${esc(state.diceText||'Seleziona una caratteristica o una abilit\u00e0.')}</div></div><button class="btn sm" data-roll="0" data-label="D20 senza bonus">Tira d20</button></div></section><section class="card panelcard"><div class="contentrow"><h3>Abilit\u00e0</h3></div><div class="skills">${SKILLS.map((sk,i)=>`<div class="skill"><span class="prof-dot ${c.trained.includes(sk)?'yes':''}"></span><span>${esc(sk)}</span><button type="button" data-roll="${c.skills[i]}" data-label="${esc(sk)}">${fmt(c.skills[i])}</button></div>`).join('')}</div></section><section class="card panelcard"><h3>Tiri salvezza e dettagli</h3>${ABILITIES.map(([id,label],i)=>`<div class="minirow"><span>${label}</span><button class="btn sm ghost" data-roll="${c.saves[i]}" data-label="TS ${label}">${fmt(c.saves[i])} / tira</button></div>`).join('')}<div class="minirow"><span>Dadi Vita</span><strong>${c.hitdice}</strong></div><div class="minirow"><span>Lingue</span><strong>${c.language}</strong></div></section>`;}
@@ -659,8 +763,8 @@ function resourceRow(id,r,compact=false){
 }
 function renderResourceSummary(c){return `<div class="card panelcard tracker-panel"><h3>Risorse e utilizzi</h3><div class="simplelist tracker-resources">${resourcesFor(state.char).map(r=>resourceRow(state.char,r,true)).join('')}</div><button type="button" class="btn sm" data-tab="magie" style="margin-top:11px;width:100%">Vedi magie e capacità</button></div>`;}
 function renderGallery(){return `<section class="page-banner"><div class="eyebrow">WAXSKULL / GALLERIA</div><h1>Volti dell'avventura</h1><p>I protagonisti della campagna.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead"><div><div class="eyebrow">I VOSTRI PERSONAGGI</div><h2>Quattro destini</h2></div></div><div class="gallery-grid portrait-gallery">${['elara','gorian','rey','white'].map(id=>{const c=CHARACTERS[id];return `<button class="gallery-portrait" data-open-char="${id}" type="button"><span class="gallery-picture">${portrait(id)}</span><span class="gallery-bottom"><strong>${c.name}</strong><span>${esc(c.race)} &middot; ${esc(c.className)} ${c.level}</span></span></button>`}).join('')}</div>${state.gallery.length?`<div class="sectionhead"><div><div class="eyebrow">ARCHIVIO VISIVO</div><h2>Immagini dell'avventura</h2></div></div><div class="gallery-grid">${state.gallery.map(g=>`<article class="card gallerycard"><img loading="lazy" src="${g.data}" alt="${esc(g.title)}"><div class="gbody"><h3>${esc(g.title||'Immagine della campagna')}</h3>${g.caption?`<p>${esc(g.caption)}</p>`:''}</div></article>`).join('')}</div>`:''}`;}
-function handleClick(e){if(handleTrackReset(e)||handleTrackStep(e))return;const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
-document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('change',handleTrackInput);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
+function handleClick(e){if(handleDiaryClick(e)||handleTrackReset(e)||handleTrackStep(e))return;const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
+document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('input',handleDiaryInput);document.addEventListener('change',handleTrackInput);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
 render();
 </script>
 </body>

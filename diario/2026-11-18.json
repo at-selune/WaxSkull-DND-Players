@@ -1,0 +1,159 @@
+{
+  "id": "2026-11-18",
+  "date": "18 novembre 2026",
+  "title": "I segugi della notte",
+  "summary": "L'esplorazione dell'accampamento, una frattura nella realtà, lo scontro con tre creature d'ombra e una misteriosa scoperta sotto un carro.",
+  "intro": "Dopo essere usciti dalla galleria montana, White, Gorian, Rey ed Elara si trovano davanti a un accampamento devastato. Le tracce di una fuga precipitosa e un fenomeno insolito li conducono a uno scontro con tre segugi delle ombre.",
+  "sections": [
+    {
+      "title": "L'accampamento dei mercanti",
+      "paragraphs": [
+        "Il gruppo esamina l'accampamento. I carri, le tende e gli oggetti sparsi indicano che apparteneva a mercanti umani. I cadaveri presentano graffi e tagli lunghi e profondi; il sangue è ancora fresco. Il focolare conserva braci accese, la minestra rovesciata fuma ancora e il pentolame è sparso sul terreno. La strage sembra essere avvenuta da poco, ma i tentativi di esaminare più a fondo le ferite non chiariscono chi l'abbia provocata.",
+        "White studia le impronte intorno al focolare e nota i segni di una fuga disordinata: alcune persone sembrano essere inciampate nelle braci. Individua tre direzioni. Verso nord si distinguono tre tracce umane e una diversa; verso ovest tracce insolite; verso sud una sola traccia umana. Nessuno riesce ancora a identificare chi abbia lasciato le impronte.",
+        "Gorian fruga nelle tende, trova una sacca di sassolini e, in un'altra, una corda, un sacchetto e un piccolo pugnale. Lascia il pugnale, conserva la corda e le tre monete d'oro trovate nel sacchetto. I sassolini vengono lanciati verso White e si spargono. Elara esamina i cadaveri e recupera tre bronzini, riponendoli nella sottana. Rey sale su un albero fino a circa sei metri, senza scorgere movimenti anomali, poi ridiscende; beve anche il vino rimasto in una brocca."
+      ]
+    },
+    {
+      "title": "La creatura di Gorian",
+      "paragraphs": [
+        "Mentre si trova in una tenda, Gorian richiama una grande creatura dall'aspetto canino, composta d'ombra. Gli altri riescono a vederla mentre Gorian interagisce con lei. L'apparizione suscita diffidenza: White estrae il martello e chiede spiegazioni.",
+        "La conversazione mette in luce la tensione all'interno del gruppo. Gorian ribadisce che il fatto di viaggiare insieme non significa necessariamente costituire una compagnia. Il gruppo non ottiene una spiegazione completa sulla creatura."
+      ]
+    },
+    {
+      "title": "La frattura nella realtà",
+      "paragraphs": [
+        "Un rumore insolito attira l'attenzione verso la direzione da cui sono arrivati. I quattro scoprono una frattura verticale nella realtà, alta all'incirca tra 1,6 e 2 metri, che parte dal suolo. I bordi sono irregolari, attraversati da bagliori violacei. Al suo interno si intravede il proseguimento del paesaggio, ma quasi privo di colori.",
+        "Rey offre a White un dado di Ispirazione Bardica. I personaggi lanciano alcuni sassolini attraverso la frattura, senza udire un rumore di caduta dall'altra parte. Per esaminarla con maggiore sicurezza fissano una corda a un albero. Elara si assicura alla corda e avvicina la mano alla frattura: subisce tre danni necrotici. Viene tirata indietro, scoppia a piangere per il dolore e rifiuta di ripetere l'esperimento. Rey interviene con Parola Guaritrice, riportandola a pieni punti ferita.",
+        "Elara ottiene 21 alla prova di Arcano e riconosce una frattura anomala tra piani, collegata al Piano Negativo. Spiega agli altri ciò che sa di quel piano e dei suoi pericoli, compresi i Nightwalker. Il gruppo ricorda di aver già incontrato una di queste creature nei pressi di Meinend."
+      ]
+    },
+    {
+      "title": "L'arrivo dei segugi",
+      "paragraphs": [
+        "Esaminando il terreno, il gruppo individua una pista di grandi impronte canine che va dalla frattura verso l'accampamento. Non trova impronte di ritorno. La somiglianza con la creatura apparsa nella tenda di Gorian alimenta le domande, ma non chiarisce chi abbia causato la strage.",
+        "Il gruppo decide di seguire la pista verso nord, dove White aveva individuato tre tracce umane e una diversa. Prima di mettersi in cammino sente due ringhi: un segugio appare a nord e un altro a sud. Gorian si prepara con Armatura di Agathys, Elara con Armatura Magica e White con Scudo della Fede. Inizia il combattimento."
+      ]
+    },
+    {
+      "title": "La battaglia",
+      "paragraphs": [
+        "Rey investe il segugio a sud con Onda Tonante. Gorian attacca il segugio a nord con il pugnale, rafforzando il colpo con Hex. Il segugio a sud morde Rey, che riesce a rimanere in piedi. White abbatte quello a nord con due martellate: le ombre si ritirano e il corpo della creatura si essicca.",
+        "Il combattimento continua contro il segugio a sud. Rey lo bersaglia con Beffa Crudele, mentre Gorian, White ed Elara cercano di colpirlo. Un terzo segugio sopraggiunge da ovest, mentre la frattura è ancora visibile. Durante un tentativo di Tocco Gelido di Elara, la magia devia e ferisce Gorian.",
+        "Il nuovo avversario morde White, ferendolo gravemente senza farlo cadere. Gorian usa la runa del Colpo Sicuro contro il segugio a sud. La creatura lo morde a sua volta, ma il contraccolpo gelido di Armatura di Agathys la uccide. White concentra quindi gli attacchi sull'ultimo segugio, potenziando un colpo con Favore Divino.",
+        "Rey colpisce l'ultimo nemico con un'altra Onda Tonante. Il segugio manca White; anche i due pugnali di Gorian mancano il bersaglio. White chiude lo scontro con Infliggi Ferite: un'energia verdastra malsana raggiunge il muso della creatura, che muore. Subito dopo, il gruppo nota che la frattura non è più presente. Non è chiaro che cosa ne abbia causato la scomparsa."
+      ],
+      "combat": {
+        "intro": "Quattro round, tre segugi. Inizialmente due avversari, uno a nord e uno a sud; il terzo arriva da ovest nel secondo round.",
+        "rounds": [
+          {
+            "title": "Round 1 — Il primo segugio cade",
+            "events": [
+              "Rey: Onda Tonante sul segugio a sud, 6 danni da tuono dopo il tiro salvezza superato; nessuna spinta.",
+              "Gorian: Hex sul segugio a nord, pugnale per 6 danni più 4 necrotici.",
+              "Il segugio a sud morde Rey per 5 danni. Rey supera il tiro salvezza di Forza e non cade prono.",
+              "White: due attacchi con il martello, 10 e 12 danni. Il segugio a nord muore.",
+              "Elara: Tocco Gelido contro il segugio a sud, mancato."
+            ]
+          },
+          {
+            "title": "Round 2 — Il terzo segugio",
+            "events": [
+              "Rey: Beffa Crudele contro il segugio a sud, 2 danni psichici e svantaggio al suo prossimo attacco.",
+              "Gorian: Rintocco dei Morti, senza danni perché il segugio supera il tiro salvezza; dichiara Hex sul segugio a sud.",
+              "Il segugio a sud attacca con svantaggio e manca.",
+              "White: Fiamma Sacra sul segugio a sud; il bersaglio supera il tiro salvezza.",
+              "Un terzo segugio compare a ovest.",
+              "Elara manca Tocco Gelido; il Fantasy Roll devia la magia e Gorian subisce 2 danni."
+            ]
+          },
+          {
+            "title": "Round 3 — Il contraccolpo di Agathys",
+            "events": [
+              "Rey: nuova Beffa Crudele contro il segugio a sud, 1 danno.",
+              "Il segugio a ovest morde White per 11 danni. White supera il tiro salvezza di Forza e resta in piedi.",
+              "Gorian usa Colpo Sicuro; gli attacchi contro il segugio a sud infliggono complessivamente 13 danni, inclusi quelli di Hex. Dichiara Rimprovero Infernale; il segugio supera il tiro salvezza di Destrezza.",
+              "Il segugio a sud morde Gorian per 9 danni e muore per i 5 danni da freddo di Armatura di Agathys.",
+              "White: Favore Divino e attacco contro il segugio a ovest, 14 danni descritti al tavolo come radiosi.",
+              "Elara sceglie Tocco Gelido anziché Dardo Incantato e manca il segugio a ovest."
+            ]
+          },
+          {
+            "title": "Round 4 — L'ultimo segugio",
+            "events": [
+              "Rey: Onda Tonante contro il segugio a ovest, 5 danni.",
+              "Il segugio tenta di mordere White e manca.",
+              "Gorian tenta due attacchi con i pugnali, entrambi mancati.",
+              "White: Infliggi Ferite sul segugio a ovest, 13 danni necrotici; l'ultimo segugio muore.",
+              "Subito dopo, il gruppo constata la scomparsa della frattura."
+            ]
+          }
+        ],
+        "outcome": "Tutti e tre i segugi vengono abbattuti. Al termine della battaglia Rey ha dichiarato 9 PF, White 6 e Gorian 8. Elara era tornata a pieni PF grazie alla guarigione di Rey e non ha subito altri danni documentati durante lo scontro."
+      }
+    },
+    {
+      "title": "L'indizio sotto il carro",
+      "paragraphs": [
+        "Dopo la battaglia, Elara ripensa al comportamento del segugio a sud. Durante lo scontro la creatura continuava a guardare il carro alla propria destra, come infastidita e distratta da qualcosa. Elara racconta agli altri ciò che ha notato.",
+        "Il gruppo si avvicina al carro ed esamina la zona sotto la ruota anteriore destra, dal lato dell'aggancio. Lì trova una polvere di colore dorato, simile a braci ardenti. La sessione termina su questa scoperta: i quattro sono ancora all'accampamento."
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "who": "Gorian",
+      "text": "Una corda e 3 monete d'oro, recuperate nelle tende."
+    },
+    {
+      "who": "Elara",
+      "text": "3 bronzini recuperati esaminando i cadaveri."
+    }
+  ],
+  "clues": [
+    {
+      "title": "La strage recente",
+      "text": "Sangue fresco, minestra ancora fumante, braci accese e ferite lunghe e profonde sui cadaveri umani."
+    },
+    {
+      "title": "Le tre piste",
+      "text": "Nord: tre tracce umane e una diversa. Ovest: tracce insolite. Sud: una traccia umana."
+    },
+    {
+      "title": "La frattura",
+      "text": "Paesaggio quasi senza colori, bordi violacei; il contatto ha ferito Elara. Il suo esame arcano l'ha collegata al Piano Negativo."
+    },
+    {
+      "title": "Le grandi impronte canine",
+      "text": "Dalla frattura all'accampamento, senza tracce di ritorno osservate."
+    },
+    {
+      "title": "Il carro",
+      "text": "Il segugio a sud guardava insistentemente il carro. Sotto la ruota anteriore destra è stata trovata polvere dorata simile a braci ardenti."
+    }
+  ],
+  "questions": [
+    "Chi ha devastato l'accampamento e a chi appartengono le tracce umane?",
+    "Che cosa ha aperto la frattura e perché è scomparsa dopo la battaglia?",
+    "Qual è il legame tra la creatura apparsa nella tenda di Gorian e i segugi incontrati?",
+    "Che cosa è la polvere dorata sotto il carro e perché il segugio ne era distratto?"
+  ],
+  "end": [
+    {
+      "title": "Posizione",
+      "text": "Accampamento dei mercanti oltre la galleria montana, presso il carro con la polvere dorata."
+    },
+    {
+      "title": "Situazione",
+      "text": "I tre segugi sono stati abbattuti. La frattura non è più visibile. Il gruppo è ancora sul posto; nessun riposo lungo è stato completato."
+    },
+    {
+      "title": "Ultima decisione",
+      "text": "Prima dell'attacco avevate deciso di seguire le tracce verso nord. Ora avete un nuovo indizio da esaminare."
+    }
+  ],
+  "quote": {
+    "text": "Cane di merda! Non ti azzardare mai più!",
+    "speaker": "Rey, rivolgendosi al segugio a sud prima di Beffa Crudele."
+  }
+}
