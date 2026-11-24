@@ -452,7 +452,7 @@ function readEmbedded(){try{return JSON.parse(document.getElementById('embedded-
 function normalize(raw){const base=JSON.parse(JSON.stringify(DEFAULT));if(!raw||typeof raw!=='object')return base;const out={...base,...raw};for(const k of ['portraits','notes','hp','temp','resources'])if(!out[k]||typeof out[k]!=='object'||Array.isArray(out[k]))out[k]={};if(!Array.isArray(out.gallery))out.gallery=[];out.page=['home','diario','personaggi','galleria'].includes(out.page)?out.page:'home';out.char=CHARACTERS[out.char]?out.char:'white';return out;}
 let state=normalize(readEmbedded());
 
-// V4.4: only current HP, temporary HP and remaining resources are editable.
+// V4.5: current HP, temporary HP and remaining resources start at zero when not previously recorded.
 // Storage is local to this browser; one key per counter, independent of the HTML release.
 const TRACK_PREFIX='waxskull.players.tracker.v1.';
 let trackingStorageOK=true;
@@ -477,15 +477,14 @@ function trackSpec(key){
 function nameKey(id,field){return id+'.'+field}
 function allTrackingKeys(){return [...Object.keys(CHARACTERS),'dagon'].flatMap(id=>['hp','temp',...resourcesFor(id).map(r=>r.id)].map(field=>nameKey(id,field)))}
 function readTracked(spec){
- if(!spec)return '';
- if(spec.field==='hp')return state.hp[spec.id]??'';
- if(spec.field==='temp')return state.temp[spec.id]??'';
- return state.resources[spec.id]?.[spec.field]??'';
+ if(!spec)return 0;
+ const raw=spec.field==='hp'?state.hp[spec.id]:spec.field==='temp'?state.temp[spec.id]:state.resources[spec.id]?.[spec.field];
+ return cleanTracked(raw,spec.max);
 }
 function cleanTracked(raw,max){
- if(raw===null||raw===undefined||String(raw).trim()==='')return '';
+ if(raw===null||raw===undefined||String(raw).trim()==='')return 0;
  const n=Number(raw);
- if(!Number.isFinite(n))return '';
+ if(!Number.isFinite(n))return 0;
  return Math.max(0,Math.min(max===null?Number.MAX_SAFE_INTEGER:max,Math.trunc(n)));
 }
 function putTracked(spec,value){
@@ -494,13 +493,12 @@ function putTracked(spec,value){
  else {if(!state.resources[spec.id])state.resources[spec.id]={};state.resources[spec.id][spec.field]=value;}
 }
 function restoreTracking(){
- try{
-  for(const key of allTrackingKeys()){
-   const spec=trackSpec(key),raw=window.localStorage.getItem(TRACK_PREFIX+key);
-   if(raw!==null)putTracked(spec,cleanTracked(raw,spec.max));
-   else {const initial=readTracked(spec);if(initial!=='')putTracked(spec,cleanTracked(initial,spec.max));}
-  }
- }catch(e){trackingStorageOK=false;}
+ for(const key of allTrackingKeys()){
+  const spec=trackSpec(key);let raw=readTracked(spec);
+  try{const saved=window.localStorage.getItem(TRACK_PREFIX+key);if(saved!==null)raw=saved;}
+  catch(e){trackingStorageOK=false;}
+  putTracked(spec,cleanTracked(raw,spec.max));
+ }
 }
 function updateStorageNotice(){
  document.querySelectorAll('[data-tracker-status]').forEach(el=>{el.textContent=trackingStorageOK?'Salvataggio automatico su questo browser.':'Salvataggio locale non disponibile: i valori si perdono chiudendo la pagina.';});
@@ -510,16 +508,15 @@ function syncTracker(spec,source){
  document.querySelectorAll('[data-track-key]').forEach(el=>{
   if(el.dataset.trackKey!==spec.key)return;
   const input=el.querySelector('[data-track-input]');
-  if(input&&input!==source)input.value=v===''?'':String(v);
+  if(input&&input!==source)input.value=String(v);
   const minus=el.querySelector('[data-track-step="-1"]'),plus=el.querySelector('[data-track-step="1"]');
-  if(minus)minus.disabled=v===''||v<=0;
-  if(plus)plus.disabled=v===''||(spec.max!==null&&v>=spec.max);
+  if(minus)minus.disabled=v<=0;
+  if(plus)plus.disabled=spec.max!==null?v>=spec.max:v>=Number.MAX_SAFE_INTEGER;
  });
  if(spec.field==='hp')document.querySelectorAll('[data-hp-fill]').forEach(el=>{
   if(el.dataset.hpFill!==spec.id)return;
-  el.style.width=(v===''?0:Math.max(0,Math.min(100,v/spec.max*100)))+'%';
-  const bar=el.parentElement;
-  if(bar){if(v==='')bar.removeAttribute('aria-valuenow');else bar.setAttribute('aria-valuenow',String(v));}
+  el.style.width=Math.max(0,Math.min(100,v/spec.max*100))+'%';
+  const bar=el.parentElement;if(bar)bar.setAttribute('aria-valuenow',String(v));
  });
 }
 function setTracked(key,raw,{persist=true,source=null}={}){
@@ -530,37 +527,39 @@ function setTracked(key,raw,{persist=true,source=null}={}){
 }
 function trackerControl(id,field){
  const spec=trackSpec(nameKey(id,field));if(!spec)return '';
- const v=readTracked(spec),blank=v==='';
- return `<div class="tracker-control" data-track-key="${esc(spec.key)}" role="group" aria-label="${esc(spec.label)}"><button type="button" class="btn tracker-step" data-track-step="-1" aria-label="${esc('Diminuisci '+spec.label)}"${blank||v<=0?' disabled':''}>−</button><input type="number" min="0"${spec.max===null?'':' max="'+spec.max+'"'} step="1" inputmode="numeric" autocomplete="off" data-track-input aria-label="${esc(spec.label)}" placeholder="—" value="${esc(v)}"><button type="button" class="btn tracker-step" data-track-step="1" aria-label="${esc('Aumenta '+spec.label)}"${blank||(spec.max!==null&&v>=spec.max)?' disabled':''}>+</button>${spec.max===null?'':`<span class="tracker-max">/ ${spec.max}</span>`}</div>`;
+ const v=readTracked(spec),atMax=v>=(spec.max===null?Number.MAX_SAFE_INTEGER:spec.max);
+ return `<div class="tracker-control" data-track-key="${esc(spec.key)}" role="group" aria-label="${esc(spec.label)}"><button type="button" class="btn tracker-step" data-track-step="-1" aria-label="${esc('Diminuisci '+spec.label)}"${v<=0?' disabled':''}>−</button><input type="number" min="0"${spec.max===null?'':' max="'+spec.max+'"'} step="1" inputmode="numeric" autocomplete="off" data-track-input aria-label="${esc(spec.label)}" placeholder="0" value="${v}"><button type="button" class="btn tracker-step" data-track-step="1" aria-label="${esc('Aumenta '+spec.label)}"${atMax?' disabled':''}>+</button>${spec.max===null?'':`<span class="tracker-max">/ ${spec.max}</span>`}</div>`;
 }
 function handleTrackInput(e){
  const el=e.target.closest('[data-track-input]');if(!el)return;
  const wrap=el.closest('[data-track-key]');if(!wrap)return;
  const spec=trackSpec(wrap.dataset.trackKey);if(!spec)return;
- // Valid values save as typed; an empty or out-of-range draft is committed on change.
  const raw=el.value;
- if(e.type==='input'){
-  if(raw.trim()!==''&&Number.isInteger(Number(raw))&&Number(raw)>=0&&(spec.max===null||Number(raw)<=spec.max))setTracked(spec.key,raw,{source:el});
- }else {setTracked(spec.key,raw);el.value=String(readTracked(spec));}
+ if(e.type==='input'&&raw.trim()===''){
+  // Allow clearing while editing, but the stored value is already zero.
+  setTracked(spec.key,0,{source:el});return;
+ }
+ setTracked(spec.key,raw,{source:el});
+ const value=String(readTracked(spec));
+ if(el.value!==value)el.value=value;
 }
 function handleTrackStep(e){
  const el=e.target.closest('[data-track-step]');if(!el)return false;
  const wrap=el.closest('[data-track-key]'),spec=wrap&&trackSpec(wrap.dataset.trackKey);
  if(!spec||el.disabled)return true;
- const v=readTracked(spec);if(v==='')return true;
- const delta=Number(el.dataset.trackStep);if(delta===1||delta===-1)setTracked(spec.key,v+delta);
+ const v=readTracked(spec),delta=Number(el.dataset.trackStep);
+ if(delta===1||delta===-1)setTracked(spec.key,v+delta);
  return true;
 }
 function handleTrackingStorage(e){
  if(typeof e.key!=='string'||!e.key.startsWith(TRACK_PREFIX))return;
  const key=e.key.slice(TRACK_PREFIX.length);if(trackSpec(key))setTracked(key,e.newValue,{persist:false});
 }
-function trackingNotice(){return `<p class="tracker-help">Imposta il valore attuale, poi usa − e + oppure modifica il numero direttamente.</p><p class="tracker-status" data-tracker-status>${trackingStorageOK?'Salvataggio automatico su questo browser.':'Salvataggio locale non disponibile: i valori si perdono chiudendo la pagina.'}</p>`;}
+function trackingNotice(){return `<p class="tracker-help">Usa − e + oppure modifica il numero direttamente.</p><p class="tracker-status" data-tracker-status>${trackingStorageOK?'Salvataggio automatico su questo browser.':'Salvataggio locale non disponibile: i valori si perdono chiudendo la pagina.'}</p>`;}
 function hpPanel(id){
- const spec=trackSpec(nameKey(id,'hp')),v=readTracked(spec),width=v===''?0:Math.min(100,Math.max(0,v/spec.max*100));
- return `<div class="card panelcard tracker-panel"><div class="eyebrow">Stato attuale</div><h3 style="margin:8px 0 12px">Punti ferita</h3><div class="tracker-line"><b>Attuali</b>${trackerControl(id,'hp')}</div><div class="hpbar" role="progressbar" aria-label="Punti ferita" aria-valuemin="0" aria-valuemax="${spec.max}"${v===''?'':' aria-valuenow="'+v+'"'}><span data-hp-fill="${esc(id)}" style="width:${width}%"></span></div><div class="tracker-line"><b>Temporanei</b>${trackerControl(id,'temp')}</div>${trackingNotice()}</div>`;
+ const spec=trackSpec(nameKey(id,'hp')),v=readTracked(spec),width=Math.min(100,Math.max(0,v/spec.max*100));
+ return `<div class="card panelcard tracker-panel"><div class="eyebrow">Stato attuale</div><h3 style="margin:8px 0 12px">Punti ferita</h3><div class="tracker-line"><b>Attuali</b>${trackerControl(id,'hp')}</div><div class="hpbar" role="progressbar" aria-label="Punti ferita" aria-valuemin="0" aria-valuemax="${spec.max}" aria-valuenow="${v}"><span data-hp-fill="${esc(id)}" style="width:${width}%"></span></div><div class="tracker-line"><b>Temporanei</b>${trackerControl(id,'temp')}</div>${trackingNotice()}</div>`;
 }
-
 restoreTracking();
 function esc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function fmt(v){if(v===null||v===undefined||v==='')return '\u2014';return Number(v)>=0?'+'+v:String(v)}
@@ -619,7 +618,7 @@ function resourceRow(id,r,compact=false){return `<div class="simpleitem tracker-
 function renderResourceSummary(c){return `<div class="card panelcard tracker-panel"><h3>Risorse disponibili</h3><div class="simplelist tracker-resources">${resourcesFor(state.char).map(r=>resourceRow(state.char,r,true)).join('')}</div><button type="button" class="btn sm" data-tab="magie" style="margin-top:11px;width:100%">Vedi magie e capacità</button></div>`;}
 function renderGallery(){return `<section class="page-banner"><div class="eyebrow">WAXSKULL / GALLERIA</div><h1>Volti dell'avventura</h1><p>I protagonisti della campagna.</p><div class="banner-sigil" aria-hidden="true">&#10022;</div></section><div class="sectionhead"><div><div class="eyebrow">I VOSTRI PERSONAGGI</div><h2>Quattro destini</h2></div></div><div class="gallery-grid portrait-gallery">${['elara','gorian','rey','white'].map(id=>{const c=CHARACTERS[id];return `<button class="gallery-portrait" data-open-char="${id}" type="button"><span class="gallery-picture">${portrait(id)}</span><span class="gallery-bottom"><strong>${c.name}</strong><span>${esc(c.race)} &middot; ${esc(c.className)} ${c.level}</span></span></button>`}).join('')}</div>${state.gallery.length?`<div class="sectionhead"><div><div class="eyebrow">ARCHIVIO VISIVO</div><h2>Immagini dell'avventura</h2></div></div><div class="gallery-grid">${state.gallery.map(g=>`<article class="card gallerycard"><img loading="lazy" src="${g.data}" alt="${esc(g.title)}"><div class="gbody"><h3>${esc(g.title||'Immagine della campagna')}</h3>${g.caption?`<p>${esc(g.caption)}</p>`:''}</div></article>`).join('')}</div>`:''}`;}
 function handleClick(e){if(handleTrackStep(e))return;const a=e.target.closest('[data-page]');if(a){navigate(a.dataset.page);return}const d=e.target.closest('[data-open-dagon]');if(d){state.tab='dagon';navigate('personaggi','gorian');return}const b=e.target.closest('[data-open-char]');if(b){state.tab='statistiche';navigate('personaggi',b.dataset.openChar);return}const c=e.target.closest('[data-tab]');if(c){state.tab=c.dataset.tab;render();return}const roll=e.target.closest('[data-roll]');if(roll){const die=1+Math.floor(Math.random()*20),bonus=n(roll.dataset.roll),label=roll.dataset.label;state.diceText=`${label}: d20 ${die} ${fmt(bonus)} = ${die+bonus}`;render();toast(state.diceText);return}}
-document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('change',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
+document.addEventListener('click',handleClick);document.addEventListener('input',handleTrackInput);document.addEventListener('change',handleTrackInput);document.addEventListener('focusout',handleTrackInput);window.addEventListener('storage',handleTrackingStorage);document.getElementById('goHome').addEventListener('click',()=>navigate('home'));
 render();
 </script>
 </body>
